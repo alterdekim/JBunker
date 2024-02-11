@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 @Data
 @Configuration
 @PropertySource("file:./telegram.properties")
-public class TelegramConfig {
+public class TelegramConfig { //
     @Value("${bot.botToken}") private String botToken;
     @Value("${bot.botLogin}") private String botLogin;
     @Value("${bot.master}") private String masterId;
