@@ -41,6 +41,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="/panel?section=stats" th:text="#{stats}"></a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/panel?section=actions" th:text="#{actions}"></a>
+                                </li>
                             </ul>
                             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                                 <li class="nav-item dropdown">
@@ -279,6 +282,20 @@
                                         <div class="mb-3">
                                             <label for="work_desc_text" class="col-form-label" th:text="#{inladesc}"></label>
                                             <input type="text" class="form-control" id="work_desc_text" name="work_desc_text">
+                                        </div>
+                                    </th:block>
+                                    <th:block th:case="actions">
+                                        <div class="mb-3">
+                                            <label for="action_body_text" class="form-label" th:text="#{inlaction}"></label>
+                                            <textarea class="form-control" id="action_body_text" name="action_body_text" rows="3"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="action_name_text" class="col-form-label" th:text="#{inlaname}"></label>
+                                            <input type="text" class="form-control" id="action_name_text" name="action_name_text">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="action_desc_text" class="col-form-label" th:text="#{inladesc}"></label>
+                                            <input type="text" class="form-control" id="action_desc_text" name="action_desc_text">
                                         </div>
                                     </th:block>
                                     <th:block th:case="diss">

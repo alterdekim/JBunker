@@ -6,6 +6,7 @@ import com.alterdekim.javabot.service.*;
 import com.alterdekim.javabot.util.HashUtils;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@AllArgsConstructor
 @RestController
 public class DatabaseController {
     private final BioService bioService;
@@ -26,25 +28,7 @@ public class DatabaseController {
     private final TextDataValService textDataValService;
     private final DisasterService disasterService;
     private final SynergyService synergyService;
-
-    public DatabaseController(
-            BioService bioService,
-            HealthService healthService,
-            HobbyService hobbyService,
-            LuggageService luggageService,
-            WorkService workService,
-            TextDataValService textDataValService,
-            DisasterService disasterService,
-            SynergyService synergyService) {
-        this.bioService = bioService;
-        this.healthService = healthService;
-        this.hobbyService = hobbyService;
-        this.luggageService = luggageService;
-        this.workService = workService;
-        this.textDataValService = textDataValService;
-        this.disasterService = disasterService;
-        this.synergyService = synergyService;
-    }
+    private final ActionScriptsService actionService;
 
     private void saveGender(Map<String, String> params) {
         Boolean canDie = Boolean.parseBoolean(params.get("canDie"));
@@ -116,6 +100,18 @@ public class DatabaseController {
         TextDataVal t2 = textDataValService.save(new TextDataVal(desc_text));
 
         disasterService.saveDisaster(new Disaster(t1.getId(), t2.getId()));
+    }
+
+    private void saveAction(Map<String, String> params) {
+        String scriptBody = new String(HashUtils.decodeHexString(params.get("action_body_text")));
+
+        String name_text = new String(HashUtils.decodeHexString(params.get("action_name_text")));
+        TextDataVal t1 = textDataValService.save(new TextDataVal(name_text));
+
+        String desc_text = new String(HashUtils.decodeHexString(params.get("action_desc_text")));
+        TextDataVal t2 = textDataValService.save(new TextDataVal(desc_text));
+
+        actionService.saveScript(new ActionScript(t1.getId(), t2.getId(), scriptBody));
     }
 
     @PostMapping("/api/remove_synergy")
@@ -214,6 +210,9 @@ public class DatabaseController {
             case "diss":
                 saveDiss(params);
                 break;
+            case "actions":
+                saveAction(params);
+                break;
             default:
                 saveDiss(params);
                 break;
@@ -243,6 +242,9 @@ public class DatabaseController {
                 break;
             case "diss":
                 disasterService.removeById(entry_id);
+                break;
+            case "actions":
+                actionService.removeById(entry_id);
                 break;
             default:
                 disasterService.removeById(entry_id);
@@ -274,6 +276,8 @@ public class DatabaseController {
                     return mapper.writeValueAsString(luggageService.getAllLuggages());
                 case "diss":
                     return mapper.writeValueAsString(disasterService.getAllDisasters());
+                case "actions":
+                    return mapper.writeValueAsString(actionService.getAllActionScripts());
                 default:
                     return mapper.writeValueAsString(disasterService.getAllDisasters());
             }
@@ -301,6 +305,8 @@ public class DatabaseController {
                     return mapper.writeValueAsString(luggageService.getLuggageById(l));
                 case "diss":
                     return mapper.writeValueAsString(disasterService.getDisasterById(l));
+                case "actions":
+                    return mapper.writeValueAsString(actionService.getActionScriptById(l));
                 default:
                     return mapper.writeValueAsString(disasterService.getDisasterById(l));
             }

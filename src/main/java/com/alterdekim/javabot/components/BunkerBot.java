@@ -418,6 +418,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.dayNightFields = new DayNightFields();
         this.players = new ArrayList<>();
         this.gameState = GameState.NONE;
+        this.last_p = 0;
     }
 
     @Override

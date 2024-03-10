@@ -23,6 +23,12 @@ function grab_form() {
          }
          arr.push(query);
     });
+    $("form#entryForm :textarea").each(function() {
+        var input = $(this);
+        var vv = str_toHex(input.val());
+        let query = input.attr('id') + "=" + vv;
+        arr.push(query);
+    });
     arr.push("section=" + new URL(window.location.href).searchParams.get("section"));
     return arr.join("&");
 }
@@ -98,6 +104,16 @@ function form_disaster(jobj) {
     });
 }
 
+function form_actions(jobj) {
+    get_text_api(jobj.nameTextId, function(t) {
+        $("#action_name_text").val(t);
+    });
+    get_text_api(jobj.descTextId, function(t) {
+        $("#action_desc_text").val(t);
+    });
+    $("#action_body_text").val(jobj.scriptBody);
+}
+
 function show_modal_edit(jobj, oid) {
     var section = new URL(window.location.href).searchParams.get("section");
 
@@ -119,6 +135,9 @@ function show_modal_edit(jobj, oid) {
             break;
         case "diss":
             form_disaster(jobj);
+            break;
+        case "actions":
+            form_actions(jobj);
             break;
         default:
             form_disaster(jobj);

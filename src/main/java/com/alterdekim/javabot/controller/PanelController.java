@@ -3,6 +3,7 @@ package com.alterdekim.javabot.controller;
 import com.alterdekim.javabot.entities.*;
 import com.alterdekim.javabot.service.*;
 import com.alterdekim.javabot.util.UAgentInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import java.util.*;
 
 @Slf4j
 @Controller
+@AllArgsConstructor
 public class PanelController {
     private final BioService bioService;
     private final HealthService healthService;
@@ -26,23 +28,7 @@ public class PanelController {
     private final WorkService workService;
     private final TextDataValService textDataValService;
     private final DisasterService disasterService;
-
-    public PanelController(
-            BioService bioService,
-            HealthService healthService,
-            HobbyService hobbyService,
-            LuggageService luggageService,
-            WorkService workService,
-            TextDataValService textDataValService,
-            DisasterService disasterService) {
-        this.bioService = bioService;
-        this.healthService = healthService;
-        this.hobbyService = hobbyService;
-        this.luggageService = luggageService;
-        this.workService = workService;
-        this.textDataValService = textDataValService;
-        this.disasterService = disasterService;
-    }
+    private final ActionScriptsServiceImpl scriptsService;
 
     private List<Card> dissToCards() {
         List<Disaster> bios = disasterService.getAllDisasters();
@@ -134,6 +120,21 @@ public class PanelController {
         return cards;
     }
 
+    private List<Card> actionsToCards() {
+        List<ActionScript> scripts = scriptsService.getAllActionScripts();
+        List<Card> cards = new ArrayList<>();
+        for( ActionScript b : scripts ) {
+            Card card = new Card();
+            card.setId(b.getId());
+            card.setTitle(textDataValService.getTextDataValById(b.getTextNameId()).getText());
+            card.setBody(Arrays.asList("Script body hidden."));
+            cards.add(card);
+        }
+        cards.sort(Comparator.comparing(Card::getId));
+        Collections.reverse(cards);
+        return cards;
+    }
+
     @GetMapping("/panel")
     public String panelPage(Model model, @RequestHeader("User-Agent") String uagent, @RequestHeader("Accept") String accepth, @RequestParam(value = "section", defaultValue = "diss") String section) {
         model.addAttribute("is_mobile", new UAgentInfo(uagent, accepth).detectSmartphone());
@@ -159,6 +160,9 @@ public class PanelController {
                 break;
             case "stats":
                 // !
+                break;
+            case "actions":
+                model.addAttribute("cards", actionsToCards() );
                 break;
         }
         return "panel";

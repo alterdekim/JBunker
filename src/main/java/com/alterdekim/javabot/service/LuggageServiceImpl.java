@@ -3,18 +3,16 @@ package com.alterdekim.javabot.service;
 import com.alterdekim.javabot.entities.Luggage;
 import com.alterdekim.javabot.entities.Synergy;
 import com.alterdekim.javabot.repository.LuggageRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 public class LuggageServiceImpl implements LuggageService {
 
     private final LuggageRepository repository;
-
-    public LuggageServiceImpl(LuggageRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public List<Luggage> getAllLuggages() {
