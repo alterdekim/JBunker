@@ -17,7 +17,13 @@ import java.util.stream.IntStream;
 @Slf4j
 public class LuaSerializer {
 
-    public static LuaTable serializeObjectList(List<Player> list) {
+   /* public static LuaTable serializeObjectList(List<Player> list) {
+        LuaTable table = new LuaTable();
+        IntStream.range(0, list.size()).forEach(i -> table.set(i, serializeObject(list.get(i))));
+        return table;
+    }*/
+
+    public static LuaTable serializeObjectList(List<?> list) {
         LuaTable table = new LuaTable();
         IntStream.range(0, list.size()).forEach(i -> table.set(i, serializeObject(list.get(i))));
         return table;

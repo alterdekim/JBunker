@@ -196,7 +196,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             p.setLuggage((Luggage) BotUtils.getRandomFromList(luggs, random));
             p.setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
             p.setHealth((Health) BotUtils.getRandomFromList(healths, random));
-            if( random.nextBoolean() ) {
+            if( random.nextDouble() > 0.6 ) {
                 p.setScripts(Arrays.asList((ActionScript) BotUtils.getRandomFromList(scripts, random)));
             } else {
                 p.setScripts(new ArrayList<>());
@@ -255,6 +255,11 @@ public class BunkerBot extends TelegramLongPollingBot {
         Globals globals = JsePlatform.standardGlobals();
         globals.set("players", LuaSerializer.serializeObjectList(players));
         globals.set("player", LuaSerializer.serializeObject(p));
+        globals.set("genders", LuaSerializer.serializeObjectList(bioService.getAllBios()));
+        globals.set("hobbies", LuaSerializer.serializeObjectList(hobbyService.getAllHobbies()));
+        globals.set("healths", LuaSerializer.serializeObjectList(healthService.getAllHealth()));
+        globals.set("luggages", LuaSerializer.serializeObjectList(luggageService.getAllLuggages()));
+        globals.set("works", LuaSerializer.serializeObjectList(workService.getAllWorks()));
         LuaValue chunk = globals.load(script.getScriptBody());
         chunk.call();
         this.players = LuaDeserializer.deserializePlayers(globals.get("players")).stream()
