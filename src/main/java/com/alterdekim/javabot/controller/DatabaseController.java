@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base32;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -103,8 +104,7 @@ public class DatabaseController {
     }
 
     private void saveAction(Map<String, String> params) {
-        String scriptBody = new String(HashUtils.decodeHexString(params.get("action_body_text")));
-
+        String scriptBody = new String(new Base32().decode(params.get("action_body_text")));
         String name_text = new String(HashUtils.decodeHexString(params.get("action_name_text")));
         TextDataVal t1 = textDataValService.save(new TextDataVal(name_text));
 

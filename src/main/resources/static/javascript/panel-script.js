@@ -8,14 +8,6 @@ function str_toHex(s) {
     return h;
 }
 
-function str_toHex_w(s) {
-    var h = '';
-    for (var i = 0; i < s.length; i++) {
-        h += s.charCodeAt(i).toString(16);
-    }
-    return h;
-}
-
 function grab_form() {
     let arr = [];
     $("form#entryForm :input").each(function() {
@@ -27,7 +19,7 @@ function grab_form() {
             var vv = str_toHex(input.val());
             query = input.attr('id') + "=" + vv;
          } else if(input.attr("id") == "action_body_text") {
-            var vv = str_toHex_w(input.val());
+            var vv = base32.encode(input.val());
             query = input.attr('id') + "=" + vv;
          } else {
             query = input.attr('id') + "=" + input.val();
