@@ -251,7 +251,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", p.getScriptMessageId()));
         sendApi(new SendMessage(groupId, String.format(Constants.PRESSED_SCRIPT_NIGHT, callbackQuery.getFrom().getFirstName())));
         sendApi(new SendMessage(callbackQuery.getMessage().getChatId()+"", Constants.THANK_YOU));
-        p.getScripts().removeIf(s -> s.getId().longValue() == script.getId().longValue());
+        p.setScripts(new ArrayList<>());
         executeLuaScript(script, p);
     }
 
