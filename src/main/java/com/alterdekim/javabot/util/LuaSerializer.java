@@ -13,13 +13,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 @Slf4j
 public class LuaSerializer {
 
     public static LuaTable serializeObjectList(List<Player> list) {
         LuaTable table = new LuaTable();
-        list.forEach(o -> table.set(table.length() + 1, serializeObject(o)));
+        IntStream.range(0, list.size()).forEach(i -> table.set(i, serializeObject(list.get(i))));
         return table;
     }
 
