@@ -99,10 +99,10 @@ function form_disaster(jobj) {
 }
 
 function form_actions(jobj) {
-    get_text_api(jobj.nameTextId, function(t) {
+    get_text_api(jobj.textNameId, function(t) {
         $("#action_name_text").val(t);
     });
-    get_text_api(jobj.descTextId, function(t) {
+    get_text_api(jobj.textDescId, function(t) {
         $("#action_desc_text").val(t);
     });
     $("#action_body_text").val(jobj.scriptBody);
