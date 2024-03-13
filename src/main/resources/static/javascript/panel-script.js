@@ -23,12 +23,6 @@ function grab_form() {
          }
          arr.push(query);
     });
-    $("form#entryForm :textarea").each(function() {
-        var input = $(this);
-        var vv = str_toHex(input.val());
-        let query = input.attr('id') + "=" + vv;
-        arr.push(query);
-    });
     arr.push("section=" + new URL(window.location.href).searchParams.get("section"));
     return arr.join("&");
 }
