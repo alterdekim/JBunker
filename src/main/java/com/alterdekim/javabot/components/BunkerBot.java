@@ -244,7 +244,7 @@ public class BunkerBot extends TelegramLongPollingBot {
                 .findFirst()
                 .orElse(null);
         if( script == null ) return;
-        sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", p.getScriptMessageId()));
+        if( p.getScriptMessageId() != null ) sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", p.getScriptMessageId()));
         sendApi(new SendMessage(groupId, String.format(Constants.PRESSED_SCRIPT_NIGHT, callbackQuery.getFrom().getFirstName())));
         sendApi(new SendMessage(callbackQuery.getMessage().getChatId()+"", Constants.THANK_YOU));
         p.setScripts(new ArrayList<>());
@@ -318,7 +318,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             updateInfoSections(p, ins);
             sendApi(new SendMessage(callbackQuery.getMessage().getChatId()+"", Constants.THANK_YOU));
             sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", callbackQuery.getMessage().getMessageId()));
-            sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", p.getScriptMessageId()));
+            if( p.getScriptMessageId() != null) sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", p.getScriptMessageId()));
             sendApi(new SendMessage(groupId, String.format(Constants.PRESSED_NIGHT, callbackQuery.getFrom().getFirstName())));
             if( isAllAnswered() ) doDay();
         }
