@@ -9,8 +9,12 @@ import com.alterdekim.javabot.service.*;
 import com.alterdekim.javabot.util.BotUtils;
 import com.alterdekim.javabot.util.GameState;
 import com.alterdekim.javabot.util.HashUtils;
+import com.alterdekim.javabot.util.LuaSerializer;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.jse.JsePlatform;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -27,10 +31,12 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.swing.*;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 @Slf4j
@@ -52,6 +58,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     private final TextDataValService textDataValService;
     private final DisasterService disasterService;
     private final SynergyService synergyService;
+    private final ActionScriptsServiceImpl scriptsService;
 
     private final Random random;
 
@@ -68,7 +75,8 @@ public class BunkerBot extends TelegramLongPollingBot {
                      WorkService workService,
                      TextDataValService textDataValService,
                      DisasterService disasterService,
-                     SynergyService synergyService) {
+                     SynergyService synergyService,
+                     ActionScriptsServiceImpl scriptsService) {
         this.telegramConfig = telegramConfig;
         this.players = new ArrayList<>();
         this.gameState = GameState.NONE;
@@ -80,12 +88,13 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.textDataValService = textDataValService;
         this.disasterService = disasterService;
         this.synergyService = synergyService;
+        this.scriptsService = scriptsService;
         this.random = new Random();
         this.dayNightFields = new DayNightFields();
         this.linkedQueue = new ConcurrentLinkedQueue<>();
     }
 
-    @Scheduled(fixedRate = 100)
+    @Scheduled(fixedRate = 150)
     private void executeApi() {
         if( !this.linkedQueue.isEmpty() )
             sendApiMethodAsync(this.linkedQueue.poll());
@@ -183,6 +192,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         List<Luggage> luggs = luggageService.getAllLuggages();
         List<Hobby> hobbies = hobbyService.getAllHobbies();
         List<Health> healths = healthService.getAllHealth();
+        List<ActionScript> scripts = scriptsService.getAllActionScripts();
         for( Player p : players ) {
             p.setAge(random.nextInt(57)+18);
             p.setGender((Bio) BotUtils.getRandomFromList(bios, random));
@@ -190,7 +200,11 @@ public class BunkerBot extends TelegramLongPollingBot {
             p.setLuggage((Luggage) BotUtils.getRandomFromList(luggs, random));
             p.setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
             p.setHealth((Health) BotUtils.getRandomFromList(healths, random));
-
+            if( random.nextBoolean() ) {
+                p.setScripts(Arrays.asList((ActionScript) BotUtils.getRandomFromList(scripts, random)));
+            } else {
+                p.setScripts(new ArrayList<>());
+            }
             SendMessage sendMessage = new SendMessage(p.getTelegramId()+"", BotAccountProfileGenerator.build(textDataValService, p));
             sendApi(sendMessage);
         }
@@ -206,11 +220,47 @@ public class BunkerBot extends TelegramLongPollingBot {
             SendMessage sendMessage = new SendMessage(p.getTelegramId()+"", Constants.SHOW_TIME);
             sendMessage.setReplyMarkup(BotUtils.getShowKeyboard(p.getInfoSections()));
             sendApi(sendMessage);
+            sendMessage = new SendMessage(p.getTelegramId()+"", Constants.SCRIPT_MESSAGE);
+            sendMessage.setReplyMarkup(BotUtils.getScriptKeyboard(p.getScripts(), textDataValService));
+            try {
+                setScriptMessageId(p, sendApiMethod(sendMessage).getMessageId());
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
         }
+    }
+
+    private void setScriptMessageId(Player p, Integer messageId) {
+        IntStream.range(0, players.size()).forEach(i -> {
+            if( players.get(i).getTelegramId().longValue() == p.getTelegramId().longValue() ) {
+                players.get(i).setScriptMessageId(messageId);
+            }
+        });
     }
 
     private String getStringById(Long id) {
         return textDataValService.getTextDataValById(id).getText();
+    }
+
+    private void processNightScriptButton(Player p, CallbackQuery callbackQuery, String data) {
+        ActionScript script = p.getScripts().stream()
+                .filter(s -> textDataValService.getTextDataValById(s.getTextNameId()).getText().equals(data))
+                .findFirst()
+                .orElse(null);
+        if( script == null ) return;
+        sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", p.getScriptMessageId()));
+        sendApi(new SendMessage(groupId, String.format(Constants.PRESSED_SCRIPT_NIGHT, callbackQuery.getFrom().getFirstName())));
+        sendApi(new SendMessage(callbackQuery.getMessage().getChatId()+"", Constants.THANK_YOU));
+        p.getScripts().removeIf(s -> s.getId().longValue() == script.getId().longValue());
+        executeLuaScript(script, p);
+    }
+
+    private void executeLuaScript(ActionScript script, Player p) {
+        Globals globals = JsePlatform.standardGlobals();
+        globals.set("players", LuaSerializer.serializeObjectList(players));
+        globals.set("player", LuaSerializer.serializeObject(p));
+        LuaValue chunk = globals.load(script.getScriptBody());
+        chunk.call();
     }
 
     private void processNightButton(CallbackQuery callbackQuery) {
@@ -254,11 +304,15 @@ public class BunkerBot extends TelegramLongPollingBot {
                             getStringById(p.getWork().getTextDescId())) + "\n");
                     ins.setIsWorkShowed(true);
                     break;
+                default:
+                    processNightScriptButton(p, callbackQuery, new String(HashUtils.decodeHexString(callbackQuery.getData())));
+                    return;
             }
             setIsAnswered(callbackQuery.getFrom().getId());
             updateInfoSections(p, ins);
             sendApi(new SendMessage(callbackQuery.getMessage().getChatId()+"", Constants.THANK_YOU));
             sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", callbackQuery.getMessage().getMessageId()));
+            sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", p.getScriptMessageId()));
             sendApi(new SendMessage(groupId, String.format(Constants.PRESSED_NIGHT, callbackQuery.getFrom().getFirstName())));
             if( isAllAnswered() ) doDay();
         }

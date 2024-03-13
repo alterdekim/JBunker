@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,6 +22,8 @@ public class Player {
     private String firstName;
     private InfoSections infoSections;
     private Boolean isVoted = false;
+    private List<ActionScript> scripts;
+    private Integer scriptMessageId;
 
     public Player(Long telegramId, String name) {
         this.telegramId = telegramId;

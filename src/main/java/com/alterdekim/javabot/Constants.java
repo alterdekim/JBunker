@@ -1,6 +1,7 @@
 package com.alterdekim.javabot;
 
 public interface Constants {
+    String SCRIPT_MESSAGE = "Вам доступны карты действий:\n";
     String REMOVE_PLAYER = "Игрок %s покидает бункер.";
     String ENDVOTE = "Голосование окончено.";
     String DRAW = "Ничья. Никто не уходит из игры.";
@@ -35,6 +36,7 @@ public interface Constants {
     String LUGG_MESSAGE = "%s - багаж: %s (%s)";
     String DAY_MESSAGE_UPPER = "Следующий раунд начался!\nВероятность выжить \uD83D\uDCC8: %d%% (увеличилась на %f%%)";
     String PRESSED_NIGHT = "%s нажал(а)";
+    String PRESSED_SCRIPT_NIGHT = "%s использовал(а) карту действий";
     String DAY_MESSAGE_DOWN = "Следующий раунд начался!\nВероятность выжить \uD83D\uDCC9: %d%% (уменьшилась на %f%%)";
     String DAY_MESSAGE = "Следующий раунд начался!\nВероятность выжить: %f%%";
     String END_GAME = "Конец игры.\nВероятность выжить: %f%%";

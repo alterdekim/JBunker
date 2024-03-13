@@ -2,10 +2,14 @@ package com.alterdekim.javabot.util;
 
 import com.alterdekim.javabot.Constants;
 import com.alterdekim.javabot.bot.InfoSections;
+import com.alterdekim.javabot.entities.ActionScript;
+import com.alterdekim.javabot.service.TextDataValService;
+import com.alterdekim.javabot.service.TextDataValServiceImpl;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BotUtils {
     public static InlineKeyboardMarkup getJoinKeyboard() {
@@ -67,6 +71,18 @@ public class BotUtils {
             columns.add(Collections.singletonList(inlineKeyboardButton));
         }
         inlineKeyboardMarkup.setKeyboard(columns);
+        return inlineKeyboardMarkup;
+    }
+
+    public static InlineKeyboardMarkup getScriptKeyboard(List<ActionScript> scripts, TextDataValService textDataValService) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(scripts.stream()
+                .map(s -> {
+                    InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
+                    inlineKeyboardButton.setText(textDataValService.getTextDataValById(s.getTextNameId()).getText());
+                    inlineKeyboardButton.setCallbackData(HashUtils.bytesToHex(textDataValService.getTextDataValById(s.getTextNameId()).getText().getBytes()));
+                    return Collections.singletonList(inlineKeyboardButton);
+                }).collect(Collectors.toList()));
         return inlineKeyboardMarkup;
     }
 
