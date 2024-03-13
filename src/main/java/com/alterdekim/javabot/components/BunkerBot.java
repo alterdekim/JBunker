@@ -28,7 +28,6 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import javax.swing.*;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.*;
@@ -177,7 +176,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     private void startGame() {
         if( gameState != GameState.JOINING )
             return;
-        if(players.size() < 1) {
+        if(players.size() < 2) {
             sendApi(new SendMessage(groupId, Constants.PLAYERS_LESS_THAN_ZERO));
             return;
         }
@@ -197,7 +196,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             p.setLuggage((Luggage) BotUtils.getRandomFromList(luggs, random));
             p.setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
             p.setHealth((Health) BotUtils.getRandomFromList(healths, random));
-            if( true ) { // random.nextBoolean()
+            if( random.nextBoolean() ) {
                 p.setScripts(Arrays.asList((ActionScript) BotUtils.getRandomFromList(scripts, random)));
             } else {
                 p.setScripts(new ArrayList<>());
@@ -258,14 +257,11 @@ public class BunkerBot extends TelegramLongPollingBot {
         globals.set("player", LuaSerializer.serializeObject(p));
         LuaValue chunk = globals.load(script.getScriptBody());
         chunk.call();
-        List<Player> pls = LuaDeserializer.deserializePlayers(globals.get("players"));
-        for(Player p1 : players) {
-            log.info(p1.toString());
-        }
-        log.info("returned:");
-        for(Player p1 : pls) {
-            log.info(p1.toString());
-        }
+        this.players = LuaDeserializer.deserializePlayers(globals.get("players")).stream()
+                .map(p1 -> {
+                    p1.setScripts(getPlayerById(p1.getTelegramId()).getScripts());
+                    return p1;
+                }).collect(Collectors.toList());
     }
 
     private void processNightButton(CallbackQuery callbackQuery) {
