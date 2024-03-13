@@ -105,7 +105,7 @@ public class DatabaseController {
     }
 
     private void saveAction(Map<String, String> params) {
-        String scriptBody = new CrockfordBase32().decodeToString(params.get("action_body_text"));
+        String scriptBody = params.get("action_body_text");
         String name_text = new String(HashUtils.decodeHexString(params.get("action_name_text")));
         TextDataVal t1 = textDataValService.save(new TextDataVal(name_text));
 

@@ -9,25 +9,21 @@ function str_toHex(s) {
 }
 
 function grab_form() {
-    let arr = [];
+    let arr = {};
     $("form#entryForm :input").each(function() {
          var input = $(this);
-         let query = "";
          if(input.attr("type") == "checkbox") {
-            query = input.attr('id') + "=" + input.is(':checked');
+            arr[input.attr('id')] = "" + input.is(':checked');
          } else if(input.attr("type") == "text") {
-            var vv = str_toHex(input.val());
-            query = input.attr('id') + "=" + vv;
+            arr[input.attr('id')] = str_toHex(input.val());
          } else if(input.attr("id") == "action_body_text") {
-            var vv = base32.encode(input.val());
-            query = input.attr('id') + "=" + vv;
+            arr[input.attr('id')] = input.val();
          } else {
-            query = input.attr('id') + "=" + input.val();
+            arr[input.attr('id')] = input.val();
          }
-         arr.push(query);
     });
-    arr.push("section=" + new URL(window.location.href).searchParams.get("section"));
-    return arr.join("&");
+    arr["section"] = new URL(window.location.href).searchParams.get("section") + "";
+    return arr;
 }
 
 function add_entry_modal() {
@@ -148,9 +144,7 @@ function show_modal_edit(jobj, oid) {
 
 function edit_submit_entry(obj) {
     $.post("/api/remove_entry", "section="+new URL(window.location.href).searchParams.get("section")+"&entry_id="+($(obj).attr("data-entry-id")), function(data, status) {
-        $.post("/api/add_entry", grab_form(), function(data, status) {
-            window.location.reload();
-        });
+        add_entry();
     });
 }
 
@@ -174,8 +168,12 @@ function remove_entry(obj) {
 }
 
 function add_entry() {
-   $.post("/api/add_entry", grab_form(), function(data, status) {
-        window.location.reload();
+   $.ajax({
+    url: "/api/add_entry",
+    type: "POST",
+    data: grab_form()
+   }).done(function() {
+       window.location.reload();
    });
 }
 
