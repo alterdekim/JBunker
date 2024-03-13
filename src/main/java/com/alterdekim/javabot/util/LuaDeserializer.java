@@ -24,10 +24,9 @@ public class LuaDeserializer {
 
     private static Player deserializePlayer(LuaTable table) {
         int age = table.get("age").checkint();
-        Player p = new Player(table.get("telegramId").checklong(), table.get("name").checkjstring());
+        Player p = new Player(table.get("telegramId").checklong(), table.get("firstName").checkjstring());
         p.setAge(age);
         p.setIsAnswered(table.get("isAnswered").checkboolean());
-        p.setFirstName(table.get("firstName").checkjstring());
         p.setIsVoted(table.get("isVoted").checkboolean());
         p.setScriptMessageId(table.get("scriptMessageId").checkint());
 
