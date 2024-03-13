@@ -3,6 +3,7 @@ package com.alterdekim.javabot.controller;
 import com.alterdekim.javabot.dto.SynergyResult;
 import com.alterdekim.javabot.entities.*;
 import com.alterdekim.javabot.service.*;
+import com.alterdekim.javabot.util.CrockfordBase32;
 import com.alterdekim.javabot.util.HashUtils;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -104,7 +105,7 @@ public class DatabaseController {
     }
 
     private void saveAction(Map<String, String> params) {
-        String scriptBody = new String(new Base32().decode(params.get("action_body_text")));
+        String scriptBody = new CrockfordBase32().decodeToString(params.get("action_body_text"));
         String name_text = new String(HashUtils.decodeHexString(params.get("action_name_text")));
         TextDataVal t1 = textDataValService.save(new TextDataVal(name_text));
 
