@@ -200,7 +200,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             p.setLuggage((Luggage) BotUtils.getRandomFromList(luggs, random));
             p.setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
             p.setHealth((Health) BotUtils.getRandomFromList(healths, random));
-            if( random.nextBoolean() ) {
+            if( true ) { // random.nextBoolean()
                 p.setScripts(Arrays.asList((ActionScript) BotUtils.getRandomFromList(scripts, random)));
             } else {
                 p.setScripts(new ArrayList<>());

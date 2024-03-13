@@ -15,7 +15,7 @@ function grab_form() {
          let query = "";
          if(input.attr("type") == "checkbox") {
             query = input.attr('id') + "=" + input.is(':checked');
-         } else if(input.attr("type") == "text") {
+         } else if(input.attr("type") == "text" || input.attr("id") == "action_body_text") {
             var vv = str_toHex(input.val());
             query = input.attr('id') + "=" + vv;
          } else {
