@@ -20,7 +20,7 @@ public class ActionScriptsServiceImpl implements ActionScriptsService {
 
     @Override
     public ActionScript getActionScriptById(long scriptId) {
-        return actionScriptsRepository.findByScriptId(scriptId).orElse(null);
+        return actionScriptsRepository.findById(scriptId).orElse(null);
     }
 
     @Override
