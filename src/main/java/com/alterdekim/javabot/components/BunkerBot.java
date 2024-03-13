@@ -258,7 +258,14 @@ public class BunkerBot extends TelegramLongPollingBot {
         globals.set("player", LuaSerializer.serializeObject(p));
         LuaValue chunk = globals.load(script.getScriptBody());
         chunk.call();
-        players = LuaDeserializer.deserializePlayers(globals.get("players"));
+        List<Player> pls = LuaDeserializer.deserializePlayers(globals.get("players"));
+        for(Player p1 : players) {
+            log.info(p1.toString());
+        }
+        log.info("returned:");
+        for(Player p1 : pls) {
+            log.info(p1.toString());
+        }
     }
 
     private void processNightButton(CallbackQuery callbackQuery) {

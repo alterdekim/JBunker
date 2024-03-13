@@ -1,10 +1,7 @@
 package com.alterdekim.javabot.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinColumnsOrFormulas;
 import org.hibernate.annotations.JoinFormula;
@@ -12,6 +9,7 @@ import org.hibernate.annotations.WhereJoinTable;
 
 import java.util.List;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor

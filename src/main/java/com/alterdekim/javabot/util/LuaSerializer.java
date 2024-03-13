@@ -1,7 +1,6 @@
 package com.alterdekim.javabot.util;
 
 import com.alterdekim.javabot.bot.Player;
-import com.alterdekim.javabot.entities.Bio;
 import lombok.extern.slf4j.Slf4j;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
