@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ActionScriptsRepository extends JpaRepository<ActionScript, Long> {
-    Optional<ActionScript> findByScriptId(Long scriptId);
+    Optional<ActionScript> findById(Long id);
 
     List<ActionScript> findAll();
 }
