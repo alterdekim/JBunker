@@ -6,10 +6,7 @@ import com.alterdekim.javabot.Constants;
 import com.alterdekim.javabot.TelegramConfig;
 import com.alterdekim.javabot.entities.*;
 import com.alterdekim.javabot.service.*;
-import com.alterdekim.javabot.util.BotUtils;
-import com.alterdekim.javabot.util.GameState;
-import com.alterdekim.javabot.util.HashUtils;
-import com.alterdekim.javabot.util.LuaSerializer;
+import com.alterdekim.javabot.util.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.luaj.vm2.Globals;
@@ -261,6 +258,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         globals.set("player", LuaSerializer.serializeObject(p));
         LuaValue chunk = globals.load(script.getScriptBody());
         chunk.call();
+        players = LuaDeserializer.deserializePlayers(globals.get("players"));
     }
 
     private void processNightButton(CallbackQuery callbackQuery) {

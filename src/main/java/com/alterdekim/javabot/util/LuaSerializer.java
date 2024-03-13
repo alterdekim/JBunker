@@ -44,6 +44,18 @@ public class LuaSerializer {
                             case "java.lang.Integer":
                                 map.put(name, ((Integer) f.get(o)).intValue());
                                 break;
+                            case "float":
+                                map.put(name, f.getFloat(o));
+                                break;
+                            case "java.lang.Float":
+                                map.put(name, ((Float) f.get(o)).floatValue());
+                                break;
+                            case "double":
+                                map.put(name, f.getDouble(o));
+                                break;
+                            case "java.lang.Double":
+                                map.put(name, ((Double) f.get(o)).doubleValue());
+                                break;
                             case "boolean":
                                 map.put(name, f.getBoolean(o));
                                 break;
@@ -52,6 +64,8 @@ public class LuaSerializer {
                                 break;
                             case "java.lang.String":
                                 map.put(name, (String) f.get(o));
+                                break;
+                            case "java.util.List":
                                 break;
                             default:
                                 map.put(name, serializeObject(f.get(o)));
