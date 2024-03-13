@@ -8,6 +8,14 @@ function str_toHex(s) {
     return h;
 }
 
+function str_toHex_w(s) {
+    var h = '';
+    for (var i = 0; i < s.length; i++) {
+        h += s.charCodeAt(i).toString(16);
+    }
+    return h;
+}
+
 function grab_form() {
     let arr = [];
     $("form#entryForm :input").each(function() {
@@ -15,8 +23,11 @@ function grab_form() {
          let query = "";
          if(input.attr("type") == "checkbox") {
             query = input.attr('id') + "=" + input.is(':checked');
-         } else if(input.attr("type") == "text" || input.attr("id") == "action_body_text") {
+         } else if(input.attr("type") == "text") {
             var vv = str_toHex(input.val());
+            query = input.attr('id') + "=" + vv;
+         } else if(input.attr("id") == "action_body_text") {
+            var vv = str_toHex_w(input.val());
             query = input.attr('id') + "=" + vv;
          } else {
             query = input.attr('id') + "=" + input.val();
