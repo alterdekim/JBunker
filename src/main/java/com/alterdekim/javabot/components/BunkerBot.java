@@ -56,7 +56,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     private final SynergyService synergyService;
     private final ActionScriptsServiceImpl scriptsService;
 
-    private final Random random;
+    private final RandomComponent random;
 
     private DayNightFields dayNightFields;
 
@@ -72,7 +72,8 @@ public class BunkerBot extends TelegramLongPollingBot {
                      TextDataValService textDataValService,
                      DisasterService disasterService,
                      SynergyService synergyService,
-                     ActionScriptsServiceImpl scriptsService) {
+                     ActionScriptsServiceImpl scriptsService,
+                     RandomComponent randomComponent) {
         this.telegramConfig = telegramConfig;
         this.players = new ArrayList<>();
         this.gameState = GameState.NONE;
@@ -85,7 +86,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.disasterService = disasterService;
         this.synergyService = synergyService;
         this.scriptsService = scriptsService;
-        this.random = new Random();
+        this.random = randomComponent;
         this.dayNightFields = new DayNightFields();
         this.linkedQueue = new ConcurrentLinkedQueue<>();
     }
@@ -196,7 +197,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             p.setLuggage((Luggage) BotUtils.getRandomFromList(luggs, random));
             p.setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
             p.setHealth((Health) BotUtils.getRandomFromList(healths, random));
-            if( random.nextDouble() > 0.6 ) {
+            if( random.nextInt(100) >= 60 ) {
                 p.setScripts(Arrays.asList((ActionScript) BotUtils.getRandomFromList(scripts, random)));
             } else {
                 p.setScripts(new ArrayList<>());
@@ -216,6 +217,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             SendMessage sendMessage = new SendMessage(p.getTelegramId()+"", Constants.SHOW_TIME);
             sendMessage.setReplyMarkup(BotUtils.getShowKeyboard(p.getInfoSections()));
             sendApi(sendMessage);
+            if( p.getScripts().isEmpty() ) continue;
             sendMessage = new SendMessage(p.getTelegramId()+"", Constants.SCRIPT_MESSAGE);
             sendMessage.setReplyMarkup(BotUtils.getScriptKeyboard(p.getScripts(), textDataValService));
             try {

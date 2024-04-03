@@ -2,6 +2,7 @@ package com.alterdekim.javabot.util;
 
 import com.alterdekim.javabot.Constants;
 import com.alterdekim.javabot.bot.InfoSections;
+import com.alterdekim.javabot.components.RandomComponent;
 import com.alterdekim.javabot.entities.ActionScript;
 import com.alterdekim.javabot.service.TextDataValService;
 import com.alterdekim.javabot.service.TextDataValServiceImpl;
@@ -109,7 +110,7 @@ public class BotUtils {
         return " @"+name+" ";
     }
 
-    public static Object getRandomFromList(List list, Random random) {
+    public static Object getRandomFromList(List list, RandomComponent random) {
         return list.get(random.nextInt(list.size()));
     }
 }
