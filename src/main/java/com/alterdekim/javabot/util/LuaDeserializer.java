@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +21,39 @@ public class LuaDeserializer {
                 .collect(Collectors.toList());
     }
 
+    private static <T> T deserialize(LuaTable table, Class<T> obj) {
+        try {
+            List<String> keys = Arrays.stream(table.keys())
+                    .map(LuaValue::checkjstring)
+                    .collect(Collectors.toList());
+            T result = obj.getDeclaredConstructor().newInstance();
+            Arrays.stream(obj.getDeclaredFields())
+                    .filter(f -> keys.contains(f.getName()))
+                    .forEach(f -> {
+                        try {
+                            f.setAccessible(true);
+                            f.set(result, checkObject(f, table.get(f.getName())));
+                        } catch (IllegalAccessException e) {
+                            log.error(e.getMessage());
+                        }
+                    });
+            return result;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return null;
+    }
+
+    private static Object checkObject(Field f, LuaValue val) {
+        return switch(f.getType().getCanonicalName()) {
+            case "java.lang.Boolean" -> val.checkboolean();
+            case "java.lang.Long" -> val.checklong();
+            case "java.lang.Float", "java.lang.Double" -> val.checkdouble();
+            case "java.lang.Integer" -> val.checkint();
+            default -> null;
+        };
+    }
+
     private static Player deserializePlayer(LuaTable table) {
         int age = table.get("age").checkint();
         Player p = new Player(table.get("telegramId").checklong(), table.get("firstName").checkjstring());
@@ -28,16 +62,24 @@ public class LuaDeserializer {
         p.setIsVoted(table.get("isVoted").checkboolean());
         p.setScriptMessageId(table.get("scriptMessageId").checkint());
 
-        p.setGender(deserializeGender(table.get("gender").checktable()));
+        p.setGender(deserialize(table.get("gender").checktable(), Bio.class));
+        p.setHealth(deserialize(table.get("health").checktable(), Health.class));
+        p.setHobby(deserialize(table.get("hobby").checktable(), Hobby.class));
+        p.setWork(deserialize(table.get("work").checktable(), Work.class));
+        p.setLuggage(deserialize(table.get("luggage").checktable(), Luggage.class));
+        p.setInfoSections(deserialize(table.get("infoSections").checktable(), InfoSections.class));
+
+        /*p.setGender(deserializeGender(table.get("gender").checktable()));
         p.setHealth(deserializeHealth(table.get("health").checktable()));
         p.setHobby(deserializeHobby(table.get("hobby").checktable()));
         p.setWork(deserializeWork(table.get("work").checktable()));
         p.setLuggage(deserializeLuggage(table.get("luggage").checktable()));
 
-        p.setInfoSections(deserializeInfoSections(table.get("infoSections").checktable()));
+        p.setInfoSections(deserializeInfoSections(table.get("infoSections").checktable()));*/
         return p;
     }
 
+    /*
     private static InfoSections deserializeInfoSections(LuaTable table) {
         InfoSections infoSections = new InfoSections();
         infoSections.setIsGenderShowed(table.get("isGenderShowed").checkboolean());
@@ -103,5 +145,5 @@ public class LuaDeserializer {
         bio.setIsMale(table.get("isMale").checkboolean());
         bio.setIsFemale(table.get("isFemale").checkboolean());
         return bio;
-    }
+    } */
 }
