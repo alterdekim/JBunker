@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ToString
@@ -31,5 +32,6 @@ public class Player {
         this.telegramId = telegramId;
         this.firstName = name;
         this.infoSections = new InfoSections();
+        this.scripts = new ArrayList<>();
     }
 }

@@ -174,6 +174,10 @@ public class BunkerBot extends TelegramLongPollingBot {
         }
     }
 
+    private Boolean isNoOneHasScripts() {
+        return players.stream().allMatch(p -> p.getScripts().isEmpty());
+    }
+
     private void startGame() {
         if( gameState != GameState.JOINING )
             return;
@@ -181,6 +185,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             sendApi(new SendMessage(groupId, Constants.PLAYERS_LESS_THAN_ZERO));
             return;
         }
+        Collections.shuffle(players);
         this.gameState = GameState.STARTED;
         Disaster d = (Disaster) BotUtils.getRandomFromList(disasterService.getAllDisasters(), random);
         sendApi(new SendMessage(groupId, getStringById(d.getDescTextId())));
@@ -190,19 +195,19 @@ public class BunkerBot extends TelegramLongPollingBot {
         List<Hobby> hobbies = hobbyService.getAllHobbies();
         List<Health> healths = healthService.getAllHealth();
         List<ActionScript> scripts = scriptsService.getAllActionScripts();
-        for( Player p : players ) {
-            p.setAge(random.nextInt(57)+18);
-            p.setGender((Bio) BotUtils.getRandomFromList(bios, random));
-            p.setWork((Work) BotUtils.getRandomFromList(works, random));
-            p.setLuggage((Luggage) BotUtils.getRandomFromList(luggs, random));
-            p.setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
-            p.setHealth((Health) BotUtils.getRandomFromList(healths, random));
-            if( random.nextInt(100) >= 60 ) {
-                p.setScripts(Arrays.asList((ActionScript) BotUtils.getRandomFromList(scripts, random)));
+        for( int i = 0; i < players.size(); i++ ) {
+            players.get(i).setAge(random.nextInt(57)+18);
+            players.get(i).setGender((Bio) BotUtils.getRandomFromList(bios, random));
+            players.get(i).setWork((Work) BotUtils.getRandomFromList(works, random));
+            players.get(i).setLuggage((Luggage) BotUtils.getRandomFromList(luggs, random));
+            players.get(i).setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
+            players.get(i).setHealth((Health) BotUtils.getRandomFromList(healths, random));
+            if( random.nextInt(100) >= 60 || (i == (players.size()-1) && isNoOneHasScripts()) ) {
+                players.get(i).setScripts(Arrays.asList((ActionScript) BotUtils.getRandomFromList(scripts, random)));
             } else {
-                p.setScripts(new ArrayList<>());
+                players.get(i).setScripts(new ArrayList<>());
             }
-            SendMessage sendMessage = new SendMessage(p.getTelegramId()+"", BotAccountProfileGenerator.build(textDataValService, p));
+            SendMessage sendMessage = new SendMessage(players.get(i).getTelegramId()+"", BotAccountProfileGenerator.build(textDataValService, players.get(i)));
             sendApi(sendMessage);
         }
         doNight();
