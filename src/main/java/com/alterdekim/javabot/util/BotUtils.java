@@ -18,13 +18,13 @@ public class BotUtils {
         List<List<InlineKeyboardButton>> columns = new ArrayList<>();
         InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
         inlineKeyboardButton.setText(Constants.JOIN_GAME_BTN);
-        inlineKeyboardButton.setCallbackData(HashUtils.bytesToHex(Constants.JOIN_GAME_BTN.getBytes()));
+        inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.JOIN_GAME_BTN.getBytes()));
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton);
         columns.add(keyboardButtonsRow1);
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
         inlineKeyboardButton1.setText(Constants.START_GAME_BTN);
-        inlineKeyboardButton1.setCallbackData(HashUtils.bytesToHex(Constants.START_GAME_BTN.getBytes()));
+        inlineKeyboardButton1.setCallbackData(HashUtils.getCRC32(Constants.START_GAME_BTN.getBytes()));
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton1);
         columns.add(keyboardButtonsRow2);
@@ -38,37 +38,37 @@ public class BotUtils {
         if( !infoSections.getIsHobbyShowed() ) {
             InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
             inlineKeyboardButton.setText(Constants.HOBBY_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.bytesToHex(Constants.HOBBY_BTN.getBytes()));
+            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.HOBBY_BTN.getBytes()));
             columns.add(Collections.singletonList(inlineKeyboardButton));
         }
         if( !infoSections.getIsAgeShowed() ) {
             InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
             inlineKeyboardButton.setText(Constants.AGE_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.bytesToHex(Constants.AGE_BTN.getBytes()));
+            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.AGE_BTN.getBytes()));
             columns.add(Collections.singletonList(inlineKeyboardButton));
         }
         if( !infoSections.getIsGenderShowed() ) {
             InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
             inlineKeyboardButton.setText(Constants.GENDER_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.bytesToHex(Constants.GENDER_BTN.getBytes()));
+            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.GENDER_BTN.getBytes()));
             columns.add(Collections.singletonList(inlineKeyboardButton));
         }
         if( !infoSections.getIsHealthShowed() ) {
             InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
             inlineKeyboardButton.setText(Constants.HEALTH_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.bytesToHex(Constants.HEALTH_BTN.getBytes()));
+            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.HEALTH_BTN.getBytes()));
             columns.add(Collections.singletonList(inlineKeyboardButton));
         }
         if( !infoSections.getIsWorkShowed() ) {
             InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
             inlineKeyboardButton.setText(Constants.WORK_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.bytesToHex(Constants.WORK_BTN.getBytes()));
+            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.WORK_BTN.getBytes()));
             columns.add(Collections.singletonList(inlineKeyboardButton));
         }
         if( !infoSections.getIsLuggageShowed() ) {
             InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
             inlineKeyboardButton.setText(Constants.LUGG_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.bytesToHex(Constants.LUGG_BTN.getBytes()));
+            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.LUGG_BTN.getBytes()));
             columns.add(Collections.singletonList(inlineKeyboardButton));
         }
         inlineKeyboardMarkup.setKeyboard(columns);
@@ -81,7 +81,7 @@ public class BotUtils {
                 .map(s -> {
                     InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
                     inlineKeyboardButton.setText(textDataValService.getTextDataValById(s.getTextNameId()).getText());
-                    inlineKeyboardButton.setCallbackData(HashUtils.bytesToHex(textDataValService.getTextDataValById(s.getTextNameId()).getText().getBytes()));
+                    inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(textDataValService.getTextDataValById(s.getTextNameId()).getText().getBytes()));
                     return Collections.singletonList(inlineKeyboardButton);
                 }).collect(Collectors.toList()));
         return inlineKeyboardMarkup;
@@ -92,13 +92,13 @@ public class BotUtils {
         List<List<InlineKeyboardButton>> columns = new ArrayList<>();
         InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
         inlineKeyboardButton.setText(Constants.PROBABILITY);
-        inlineKeyboardButton.setCallbackData(HashUtils.bytesToHex(Constants.PROBABILITY.getBytes()));
+        inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.PROBABILITY.getBytes()));
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton);
         columns.add(keyboardButtonsRow1);
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
         inlineKeyboardButton1.setText(Constants.DEATHMATCH);
-        inlineKeyboardButton1.setCallbackData(HashUtils.bytesToHex(Constants.DEATHMATCH.getBytes()));
+        inlineKeyboardButton1.setCallbackData(HashUtils.getCRC32(Constants.DEATHMATCH.getBytes()));
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton1);
         columns.add(keyboardButtonsRow2);

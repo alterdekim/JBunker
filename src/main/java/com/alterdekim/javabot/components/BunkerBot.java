@@ -513,9 +513,9 @@ public class BunkerBot extends TelegramLongPollingBot {
                             update.getCallbackQuery().getId()
                     )
             );
-            if( update.getCallbackQuery().getData().equals(HashUtils.bytesToHex(Constants.JOIN_GAME_BTN.getBytes())) ) {
+            if( update.getCallbackQuery().getData().equals(HashUtils.getCRC32(Constants.JOIN_GAME_BTN.getBytes())) ) {
                 joinGame(update.getCallbackQuery().getFrom(), 0);
-            } else if( update.getCallbackQuery().getData().equals(HashUtils.bytesToHex(Constants.START_GAME_BTN.getBytes())) ) {
+            } else if( update.getCallbackQuery().getData().equals(HashUtils.getCRC32(Constants.START_GAME_BTN.getBytes())) ) {
                 if( isAdmin(update.getCallbackQuery().getFrom()) ) {
                     startGame();
                     return;

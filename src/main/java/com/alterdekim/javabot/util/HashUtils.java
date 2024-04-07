@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Locale;
+import java.util.zip.CRC32;
 
 @Slf4j
 public class HashUtils {
@@ -55,5 +57,11 @@ public class HashUtils {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars, StandardCharsets.UTF_8);
+    }
+
+    public static String getCRC32(byte[] data){
+        CRC32 fileCRC32 = new CRC32();
+        fileCRC32.update(data);
+        return String.format(Locale.US,"%08X", fileCRC32.getValue());
     }
 }
