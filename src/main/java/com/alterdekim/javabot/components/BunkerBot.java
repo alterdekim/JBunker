@@ -202,8 +202,10 @@ public class BunkerBot extends TelegramLongPollingBot {
             players.get(i).setLuggage((Luggage) BotUtils.getRandomFromList(luggs, random));
             players.get(i).setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
             players.get(i).setHealth((Health) BotUtils.getRandomFromList(healths, random));
-            if( random.nextInt(100) >= 60 || (i == (players.size()-1) && isNoOneHasScripts()) ) {
-                players.get(i).setScripts(Arrays.asList((ActionScript) BotUtils.getRandomFromList(scripts, random)));
+            if( (random.nextInt(100) >= 60 || (i == (players.size()-1) && isNoOneHasScripts())) && !scripts.isEmpty() ) {
+                ActionScript asc = (ActionScript) BotUtils.getRandomFromList(scripts, random);
+                scripts.removeIf(p -> p.getId().longValue() == asc.getId().longValue());
+                players.get(i).setScripts(Arrays.asList(asc));
             } else {
                 players.get(i).setScripts(new ArrayList<>());
             }
@@ -247,7 +249,7 @@ public class BunkerBot extends TelegramLongPollingBot {
 
     private void processNightScriptButton(Player p, CallbackQuery callbackQuery, String data) {
         ActionScript script = p.getScripts().stream()
-                .filter(s -> textDataValService.getTextDataValById(s.getTextNameId()).getText().equals(data))
+                .filter(s -> HashUtils.getCRC32(textDataValService.getTextDataValById(s.getTextNameId()).getText().getBytes()).equals(data))
                 .findFirst()
                 .orElse(null);
         if( script == null ) return;
@@ -281,44 +283,44 @@ public class BunkerBot extends TelegramLongPollingBot {
                 !getPlayerById(callbackQuery.getFrom().getId()).getIsAnswered() ) {
             Player p = getPlayerById(callbackQuery.getFrom().getId());
             InfoSections ins = p.getInfoSections();
-            switch (new String(HashUtils.decodeHexString(callbackQuery.getData()))) {
-                case Constants.GENDER_BTN:
+            switch(BioButtons.fromHash(callbackQuery.getData())) {
+                case GENDER:
                     dayNightFields.appendMessage(String.format(Constants.GENDER_MESAGE, callbackQuery.getFrom().getFirstName(),  getStringById(p.getGender().getGenderTextId()),
                             p.getGender().getCanDie() ? Constants.TRUE : Constants.FALSE,
                             p.getGender().getIsMale() ? Constants.TRUE : Constants.FALSE,
                             p.getGender().getIsFemale() ? Constants.TRUE : Constants.FALSE) + "\n");
                     ins.setIsGenderShowed(true);
                     break;
-                case Constants.HEALTH_BTN:
+                case HEALTH:
                     dayNightFields.appendMessage(String.format(Constants.HEALTH_MESSAGE, callbackQuery.getFrom().getFirstName(), getStringById(p.getHealth().getTextNameId()),
                             getStringById(p.getHealth().getTextDescId()),
                             (int) (p.getHealth().getHealth_index()*100f),
                             p.getHealth().getIsChildfree() ? Constants.TRUE : Constants.FALSE) + "\n");
                     ins.setIsHealthShowed(true);
                     break;
-                case Constants.AGE_BTN:
+                case AGE:
                     dayNightFields.appendMessage(String.format(Constants.AGE_MESSAGE, callbackQuery.getFrom().getFirstName(), p.getAge()) + "\n");
                     ins.setIsAgeShowed(true);
                     break;
-                case Constants.HOBBY_BTN:
+                case HOBBY:
                     dayNightFields.appendMessage(String.format(Constants.HOBBY_MESSAGE, callbackQuery.getFrom().getFirstName(),
                             getStringById(p.getHobby().getTextDescId())) + "\n");
                     ins.setIsHobbyShowed(true);
                     break;
-                case Constants.LUGG_BTN:
+                case LUGGAGE:
                     dayNightFields.appendMessage(String.format(Constants.LUGG_MESSAGE, callbackQuery.getFrom().getFirstName(),
                             getStringById(p.getLuggage().getTextNameId()),
                             getStringById(p.getLuggage().getTextDescId())) + "\n");
                     ins.setIsLuggageShowed(true);
                     break;
-                case Constants.WORK_BTN:
+                case WORK:
                     dayNightFields.appendMessage(String.format(Constants.WORK_MESSAGE, callbackQuery.getFrom().getFirstName(),
                             getStringById(p.getWork().getTextNameId()),
                             getStringById(p.getWork().getTextDescId())) + "\n");
                     ins.setIsWorkShowed(true);
                     break;
                 default:
-                    processNightScriptButton(p, callbackQuery, new String(HashUtils.decodeHexString(callbackQuery.getData())));
+                    processNightScriptButton(p, callbackQuery, callbackQuery.getData());
                     return;
             }
             setIsAnswered(callbackQuery.getFrom().getId());

@@ -46,10 +46,11 @@ public class LuaDeserializer {
 
     private static Object checkObject(Field f, LuaValue val) {
         return switch(f.getType().getCanonicalName()) {
-            case "java.lang.Boolean" -> val.checkboolean();
-            case "java.lang.Long" -> val.checklong();
-            case "java.lang.Float", "java.lang.Double" -> val.checkdouble();
-            case "java.lang.Integer" -> val.checkint();
+            case "java.lang.Boolean" -> Boolean.valueOf(val.checkboolean());
+            case "java.lang.Long" -> Long.valueOf(val.checklong());
+            case "java.lang.Float" -> Float.valueOf((float) val.checkdouble());
+            case "java.lang.Double" -> Double.valueOf(val.checkdouble());
+            case "java.lang.Integer" -> Integer.valueOf(val.checkint());
             default -> null;
         };
     }
