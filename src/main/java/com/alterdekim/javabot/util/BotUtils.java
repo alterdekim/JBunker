@@ -36,7 +36,7 @@ public class BotUtils {
     public static InlineKeyboardMarkup getShowKeyboard(InfoSections infoSections) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> columns = new ArrayList<>();
-        List<SectionType> sectionTypes = Arrays.asList(SectionType.values());
+        List<SectionType> sectionTypes = new ArrayList<>(Arrays.asList(SectionType.values()));
         infoSections.getSections().forEach(s -> sectionTypes.remove(s.getType()));
         sectionTypes.forEach(s -> {
             InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
