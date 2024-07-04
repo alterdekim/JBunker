@@ -326,6 +326,7 @@ public class BunkerBot extends TelegramLongPollingBot {
                 doDay();
                 return;
             }
+            setAllNotAnswered();
             doNight();
         }
     }
