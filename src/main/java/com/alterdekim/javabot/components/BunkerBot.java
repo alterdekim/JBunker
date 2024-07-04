@@ -114,8 +114,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     }
 
     private void joinGame(User user, Integer msgid) {
-        if( gameState != GameState.JOINING )
-            return;
+        if( gameState != GameState.JOINING ) return;
 
         if( !hasPlayerWithId(user.getId()) ) {
             if( canWrite(user) ) {
@@ -205,7 +204,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             if( (random.nextInt(100) >= 60 || (i == (players.size()-1) && isNoOneHasScripts())) && !scripts.isEmpty() ) {
                 ActionScript asc = (ActionScript) BotUtils.getRandomFromList(scripts, random);
                 scripts.removeIf(p -> p.getId().longValue() == asc.getId().longValue());
-                players.get(i).setScripts(Arrays.asList(asc));
+                players.get(i).setScripts(Collections.singletonList(asc));
             } else {
                 players.get(i).setScripts(new ArrayList<>());
             }
@@ -271,11 +270,10 @@ public class BunkerBot extends TelegramLongPollingBot {
         globals.set("works", LuaSerializer.serializeObjectList(workService.getAllWorks()));
         LuaValue chunk = globals.load(script.getScriptBody());
         chunk.call();
-        this.players = LuaDeserializer.deserializePlayers(globals.get("players")).stream()
-                .map(p1 -> {
-                    p1.setScripts(getPlayerById(p1.getTelegramId()).getScripts());
-                    return p1;
-                }).collect(Collectors.toList());
+        this.players = LuaDeserializer.deserializePlayers(globals.get("players"))
+                .stream()
+                .peek(p1 -> p1.setScripts(getPlayerById(p1.getTelegramId()).getScripts()))
+                .collect(Collectors.toList());
     }
 
     private void processNightButton(CallbackQuery callbackQuery) {
@@ -400,46 +398,54 @@ public class BunkerBot extends TelegramLongPollingBot {
             sendApi(new SendMessage(groupId, Constants.CANT_SEND_NOT_DAY));
             return;
         }
-        String message = Constants.INFO_MESSAGE;
+        StringBuilder message = new StringBuilder();
+        message.append(Constants.INFO_MESSAGE);
         for( Player p : players ) {
-            message += p.getFirstName() + ":\n";
+            message.append(p.getFirstName());
+            message.append(":\n");
             InfoSections s = p.getInfoSections();
             if(s.getIsGenderShowed()) {
-                message += String.format(Constants.GENDER_MESAGE, p.getFirstName(),  getStringById(p.getGender().getGenderTextId()),
+                message.append(String.format(Constants.GENDER_MESAGE, p.getFirstName(),  getStringById(p.getGender().getGenderTextId()),
                         p.getGender().getCanDie() ? Constants.TRUE : Constants.FALSE,
                         p.getGender().getIsMale() ? Constants.TRUE : Constants.FALSE,
-                        p.getGender().getIsFemale() ? Constants.TRUE : Constants.FALSE) + "\n";
+                        p.getGender().getIsFemale() ? Constants.TRUE : Constants.FALSE));
+                message.append("\n");
             }
             if(s.getIsAgeShowed()) {
-                message += String.format(Constants.AGE_MESSAGE, p.getFirstName(), p.getAge()) + "\n";
+                message.append(String.format(Constants.AGE_MESSAGE, p.getFirstName(), p.getAge()));
+                message.append("\n");
             }
             if(s.getIsLuggageShowed()) {
-                message += String.format(Constants.LUGG_MESSAGE, p.getFirstName(),
+                message.append(String.format(Constants.LUGG_MESSAGE, p.getFirstName(),
                         getStringById(p.getLuggage().getTextNameId()),
-                        getStringById(p.getLuggage().getTextDescId())) + "\n";
+                        getStringById(p.getLuggage().getTextDescId())));
+                message.append("\n");
             }
             if(s.getIsHealthShowed()) {
-                message += String.format(Constants.HEALTH_MESSAGE, p.getFirstName(), getStringById(p.getHealth().getTextNameId()),
+                message.append(String.format(Constants.HEALTH_MESSAGE, p.getFirstName(), getStringById(p.getHealth().getTextNameId()),
                         getStringById(p.getHealth().getTextDescId()),
                         (int) (p.getHealth().getHealth_index()*100f),
-                        p.getHealth().getIsChildfree() ? Constants.TRUE : Constants.FALSE) + "\n";
+                        p.getHealth().getIsChildfree() ? Constants.TRUE : Constants.FALSE));
+                message.append("\n");
             }
             if(s.getIsWorkShowed()) {
-                message += String.format(Constants.WORK_MESSAGE, p.getFirstName(),
+                message.append(String.format(Constants.WORK_MESSAGE, p.getFirstName(),
                         getStringById(p.getWork().getTextNameId()),
-                        getStringById(p.getWork().getTextDescId())) + "\n";
+                        getStringById(p.getWork().getTextDescId())));
+                message.append("\n");
             }
             if(s.getIsHobbyShowed()) {
-                message += String.format(Constants.HOBBY_MESSAGE, p.getFirstName(),
-                        getStringById(p.getHobby().getTextDescId())) + "\n";
+                message.append(String.format(Constants.HOBBY_MESSAGE, p.getFirstName(),
+                        getStringById(p.getHobby().getTextDescId())));
+                message.append("\n");
             }
-            message += "\n";
+            message.append("\n");
         }
-        sendApi(new SendMessage(groupId, message));
+        sendApi(new SendMessage(groupId, message.toString()));
     }
 
     private void endVote() {
-        Integer max = dayNightFields.getPoll().values().stream().max(Integer::compareTo).get();
+        Integer max = dayNightFields.getPoll().values().stream().max(Integer::compareTo).orElse(0);
         long count = dayNightFields.getPoll().values().stream().filter(p -> p.equals(max)).count();
         SendMessage sendMessage = new SendMessage(groupId, Constants.ENDVOTE);
         if( count > 1 ) {
@@ -529,8 +535,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             return;
         }
 
-        if( !(update.hasMessage() && update.getMessage().hasText() && update.getMessage().isCommand()) )
-            return;
+        if( !(update.hasMessage() && update.getMessage().hasText() && update.getMessage().isCommand()) ) return;
 
         String chatId = update.getMessage().getChatId()+"";
 
@@ -541,8 +546,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             sendApi(new SendMessage(chatId, Constants.GROUP_SET));
         }
 
-        if( !chatId.equals(groupId) )
-            return;
+        if( !chatId.equals(groupId) ) return;
 
         if ( (update.getMessage().getText().equals(Commands.START_GAME + "@" + getBotUsername()) ||
                 update.getMessage().getText().equals(Commands.START_GAME) ) &&
