@@ -180,7 +180,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     private void startGame() {
         if( gameState != GameState.JOINING )
             return;
-        if(players.size() < 2) {
+        if(players.size() < 1) { // TODO: change to 2
             sendApi(new SendMessage(groupId, Constants.PLAYERS_LESS_THAN_ZERO));
             return;
         }
@@ -322,7 +322,11 @@ public class BunkerBot extends TelegramLongPollingBot {
             sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", callbackQuery.getMessage().getMessageId()));
             if( p.getScriptMessageId() != null) sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", p.getScriptMessageId()));
             sendApi(new SendMessage(groupId, String.format(Constants.PRESSED_NIGHT, callbackQuery.getFrom().getFirstName())));
-            if( isAllAnswered() ) doDay();
+            if( isAllAnswered() && dayNightFields.getTurnCount() >= 3 ) {
+                doDay();
+                return;
+            }
+            doNight();
         }
     }
     
