@@ -2,6 +2,7 @@ package com.alterdekim.javabot.util;
 
 import com.alterdekim.javabot.Constants;
 import com.alterdekim.javabot.bot.InfoSections;
+import com.alterdekim.javabot.bot.SectionType;
 import com.alterdekim.javabot.components.RandomComponent;
 import com.alterdekim.javabot.entities.ActionScript;
 import com.alterdekim.javabot.service.TextDataValService;
@@ -35,42 +36,43 @@ public class BotUtils {
     public static InlineKeyboardMarkup getShowKeyboard(InfoSections infoSections) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> columns = new ArrayList<>();
-        if( !infoSections.getIsHobbyShowed() ) {
+        List<SectionType> sectionTypes = Arrays.asList(SectionType.values());
+        infoSections.getSections().forEach(s -> sectionTypes.remove(s.getType()));
+        sectionTypes.forEach(s -> {
             InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-            inlineKeyboardButton.setText(Constants.HOBBY_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.HOBBY_BTN.getBytes()));
-            columns.add(Collections.singletonList(inlineKeyboardButton));
-        }
-        if( !infoSections.getIsAgeShowed() ) {
-            InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-            inlineKeyboardButton.setText(Constants.AGE_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.AGE_BTN.getBytes()));
-            columns.add(Collections.singletonList(inlineKeyboardButton));
-        }
-        if( !infoSections.getIsGenderShowed() ) {
-            InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-            inlineKeyboardButton.setText(Constants.GENDER_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.GENDER_BTN.getBytes()));
-            columns.add(Collections.singletonList(inlineKeyboardButton));
-        }
-        if( !infoSections.getIsHealthShowed() ) {
-            InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-            inlineKeyboardButton.setText(Constants.HEALTH_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.HEALTH_BTN.getBytes()));
-            columns.add(Collections.singletonList(inlineKeyboardButton));
-        }
-        if( !infoSections.getIsWorkShowed() ) {
-            InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-            inlineKeyboardButton.setText(Constants.WORK_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.WORK_BTN.getBytes()));
-            columns.add(Collections.singletonList(inlineKeyboardButton));
-        }
-        if( !infoSections.getIsLuggageShowed() ) {
-            InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-            inlineKeyboardButton.setText(Constants.LUGG_BTN);
-            inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.LUGG_BTN.getBytes()));
-            columns.add(Collections.singletonList(inlineKeyboardButton));
-        }
+            switch(s) {
+                case HOBBY:
+                    inlineKeyboardButton.setText(Constants.HOBBY_BTN);
+                    inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.HOBBY_BTN.getBytes()));
+                    columns.add(Collections.singletonList(inlineKeyboardButton));
+                    break;
+                case AGE:
+                    inlineKeyboardButton.setText(Constants.AGE_BTN);
+                    inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.AGE_BTN.getBytes()));
+                    columns.add(Collections.singletonList(inlineKeyboardButton));
+                    break;
+                case GENDER:
+                    inlineKeyboardButton.setText(Constants.GENDER_BTN);
+                    inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.GENDER_BTN.getBytes()));
+                    columns.add(Collections.singletonList(inlineKeyboardButton));
+                    break;
+                case HEALTH:
+                    inlineKeyboardButton.setText(Constants.HEALTH_BTN);
+                    inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.HEALTH_BTN.getBytes()));
+                    columns.add(Collections.singletonList(inlineKeyboardButton));
+                    break;
+                case WORK:
+                    inlineKeyboardButton.setText(Constants.WORK_BTN);
+                    inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.WORK_BTN.getBytes()));
+                    columns.add(Collections.singletonList(inlineKeyboardButton));
+                    break;
+                case LUGGAGE:
+                    inlineKeyboardButton.setText(Constants.LUGG_BTN);
+                    inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(Constants.LUGG_BTN.getBytes()));
+                    columns.add(Collections.singletonList(inlineKeyboardButton));
+                    break;
+            }
+        });
         inlineKeyboardMarkup.setKeyboard(columns);
         return inlineKeyboardMarkup;
     }
