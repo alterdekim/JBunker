@@ -1,5 +1,6 @@
 package com.alterdekim.javabot.entities;
 
+import com.alterdekim.javabot.bot.SectionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,18 +22,18 @@ public class Synergy {
     private Long firstEntityId;
 
     @Enumerated(EnumType.ORDINAL)
-    private ColumnType firstType;
+    private SectionType firstType;
 
     @Column(nullable = false)
     private Long secondEntityId;
 
     @Enumerated(EnumType.ORDINAL)
-    private ColumnType secondType;
+    private SectionType secondType;
 
     @Column(nullable = false)
     private Float probabilityValue;
 
-    public Synergy(Long firstEntityId, ColumnType firstType, Long secondEntityId, ColumnType secondType, Float probabilityValue) {
+    public Synergy(Long firstEntityId, SectionType firstType, Long secondEntityId, SectionType secondType, Float probabilityValue) {
         this.firstEntityId = firstEntityId;
         this.firstType = firstType;
         this.secondEntityId = secondEntityId;

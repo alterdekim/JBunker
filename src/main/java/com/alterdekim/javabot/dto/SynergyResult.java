@@ -1,6 +1,6 @@
 package com.alterdekim.javabot.dto;
 
-import com.alterdekim.javabot.entities.ColumnType;
+import com.alterdekim.javabot.bot.SectionType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ public class SynergyResult {
     private Long id;
     private String firstEntityText;
     private String secondEntityText;
-    private ColumnType firstType;
-    private ColumnType secondType;
+    private SectionType firstType;
+    private SectionType secondType;
     private Float probabilityValue;
 }

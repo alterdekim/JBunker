@@ -1,5 +1,6 @@
 package com.alterdekim.javabot.controller;
 
+import com.alterdekim.javabot.bot.SectionType;
 import com.alterdekim.javabot.dto.SynergyResult;
 import com.alterdekim.javabot.entities.*;
 import com.alterdekim.javabot.service.*;
@@ -115,7 +116,7 @@ public class DatabaseController {
 
     @PostMapping("/api/remove_synergy")
     public String remove_synergy(@RequestParam Map<String, String> params) {
-        Long id = Long.parseLong(params.get("synergy_id"));
+        long id = Long.parseLong(params.get("synergy_id"));
         synergyService.removeById(id);
         return "ok";
     }
@@ -123,9 +124,9 @@ public class DatabaseController {
     @PostMapping("/api/add_synergy")
     public String add_synergy(@RequestParam Map<String, String> params) {
         Long feid = Long.parseLong(params.get("first_entity_id"));
-        ColumnType fetype = ColumnType.values()[Integer.parseInt(params.get("first_entity_type"))];
+        SectionType fetype = SectionType.values()[Integer.parseInt(params.get("first_entity_type"))];
         Long seid = Long.parseLong(params.get("second_entity_id"));
-        ColumnType setype = ColumnType.values()[Integer.parseInt(params.get("second_entity_type"))];
+        SectionType setype = SectionType.values()[Integer.parseInt(params.get("second_entity_type"))];
         Float probability = Float.parseFloat(params.get("probability"));
 
         synergyService.saveSynergy(new Synergy(feid, fetype, seid, setype, probability));
@@ -139,24 +140,14 @@ public class DatabaseController {
         String section = params.get("entity_type");
         ObjectMapper mapper = new ObjectMapper();
         try {
-            List<Synergy> synergyList = new ArrayList<>();
-            switch (section) {
-                case "agge":
-                    synergyList = bioService.getSynergies(id);
-                    break;
-                case "lugg":
-                    synergyList = luggageService.getSynergies(id);
-                    break;
-                case "prof":
-                    synergyList = workService.getSynergies(id);
-                    break;
-                case "heal":
-                    synergyList = healthService.getSynergies(id);
-                    break;
-                case "hobb":
-                    synergyList = hobbyService.getSynergies(id);
-                    break;
-            }
+            List<Synergy> synergyList = switch (section) {
+                case "agge" -> bioService.getSynergies(id);
+                case "lugg" -> luggageService.getSynergies(id);
+                case "prof" -> workService.getSynergies(id);
+                case "heal" -> healthService.getSynergies(id);
+                case "hobb" -> hobbyService.getSynergies(id);
+                default -> new ArrayList<>();
+            };
             List<SynergyResult> results = new ArrayList<>();
             for( Synergy s : synergyList ) {
                 String textFirst = getText(s.getFirstType(), s.getFirstEntityId());
@@ -170,20 +161,15 @@ public class DatabaseController {
         return "ok";
     }
 
-    private String getText(ColumnType type, Long feid) {
-        switch (type) {
-            case Bio:
-                return textDataValService.getTextDataValById(bioService.getBioById(feid).getGenderTextId()).getText();
-            case Health:
-                return textDataValService.getTextDataValById(healthService.getHealthById(feid).getTextNameId()).getText();
-            case Hobby:
-                return textDataValService.getTextDataValById(hobbyService.getHobbyById(feid).getTextDescId()).getText();
-            case Luggage:
-                return textDataValService.getTextDataValById(luggageService.getLuggageById(feid).getTextNameId()).getText();
-            case Work:
-                return textDataValService.getTextDataValById(workService.getWorkById(feid).getTextNameId()).getText();
-        }
-        return "-";
+    private String getText(SectionType type, Long feid) {
+        return switch (type) {
+            case GENDER -> textDataValService.getTextDataValById(bioService.getBioById(feid).getGenderTextId()).getText();
+            case HEALTH -> textDataValService.getTextDataValById(healthService.getHealthById(feid).getTextNameId()).getText();
+            case HOBBY -> textDataValService.getTextDataValById(hobbyService.getHobbyById(feid).getTextDescId()).getText();
+            case LUGGAGE -> textDataValService.getTextDataValById(luggageService.getLuggageById(feid).getTextNameId()).getText();
+            case WORK -> textDataValService.getTextDataValById(workService.getWorkById(feid).getTextNameId()).getText();
+            default -> "";
+        };
     }
 
     @PostMapping("/api/add_entry")
@@ -191,30 +177,13 @@ public class DatabaseController {
         /* additional data, disasters */
         String section = params.get("section");
         switch (section) {
-            case "agge":
-                saveGender(params);
-                break;
-            case "lugg":
-                saveLuggage(params);
-                break;
-            case "prof":
-                saveWork(params);
-                break;
-            case "heal":
-                saveHealth(params);
-                break;
-            case "hobb":
-                saveHobby(params);
-                break;
-            case "diss":
-                saveDiss(params);
-                break;
-            case "actions":
-                saveAction(params);
-                break;
-            default:
-                saveDiss(params);
-                break;
+            case "agge" -> saveGender(params);
+            case "lugg" -> saveLuggage(params);
+            case "prof" -> saveWork(params);
+            case "heal" -> saveHealth(params);
+            case "hobb" -> saveHobby(params);
+            case "actions" -> saveAction(params);
+            default -> saveDiss(params);
         }
         return "ok";
     }
@@ -224,30 +193,13 @@ public class DatabaseController {
         String section = params.get("section");
         long entry_id = Long.parseLong(params.get("entry_id"));
         switch (section) {
-            case "agge":
-                bioService.removeById(entry_id);
-                break;
-            case "hobb":
-                hobbyService.removeById(entry_id);
-                break;
-            case "lugg":
-                luggageService.removeById(entry_id);
-                break;
-            case "heal":
-                healthService.removeById(entry_id);
-                break;
-            case "prof":
-                workService.removeById(entry_id);
-                break;
-            case "diss":
-                disasterService.removeById(entry_id);
-                break;
-            case "actions":
-                actionService.removeById(entry_id);
-                break;
-            default:
-                disasterService.removeById(entry_id);
-                break;
+            case "agge" -> bioService.removeById(entry_id);
+            case "hobb" -> hobbyService.removeById(entry_id);
+            case "lugg" -> luggageService.removeById(entry_id);
+            case "heal" -> healthService.removeById(entry_id);
+            case "prof" -> workService.removeById(entry_id);
+            case "actions" -> actionService.removeById(entry_id);
+            default -> disasterService.removeById(entry_id);
         }
         return "ok";
     }
@@ -262,24 +214,15 @@ public class DatabaseController {
     public String getEntries(@RequestParam Map<String, String> params) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            switch (params.get("section")) {
-                case "agge":
-                    return mapper.writeValueAsString(bioService.getAllBios());
-                case "hobb":
-                    return mapper.writeValueAsString(hobbyService.getAllHobbies());
-                case "prof":
-                    return mapper.writeValueAsString(workService.getAllWorks());
-                case "heal":
-                    return mapper.writeValueAsString(healthService.getAllHealth());
-                case "lugg":
-                    return mapper.writeValueAsString(luggageService.getAllLuggages());
-                case "diss":
-                    return mapper.writeValueAsString(disasterService.getAllDisasters());
-                case "actions":
-                    return mapper.writeValueAsString(actionService.getAllActionScripts());
-                default:
-                    return mapper.writeValueAsString(disasterService.getAllDisasters());
-            }
+            return switch (params.get("section")) {
+                case "agge" -> mapper.writeValueAsString(bioService.getAllBios());
+                case "hobb" -> mapper.writeValueAsString(hobbyService.getAllHobbies());
+                case "prof" -> mapper.writeValueAsString(workService.getAllWorks());
+                case "heal" -> mapper.writeValueAsString(healthService.getAllHealth());
+                case "lugg" -> mapper.writeValueAsString(luggageService.getAllLuggages());
+                case "actions" -> mapper.writeValueAsString(actionService.getAllActionScripts());
+                default -> mapper.writeValueAsString(disasterService.getAllDisasters());
+            };
         } catch (JacksonException e) {
             log.error(e.getMessage());
         }
@@ -291,24 +234,15 @@ public class DatabaseController {
         ObjectMapper mapper = new ObjectMapper();
         long l = Long.parseLong(params.get("entry_id"));
         try {
-            switch (params.get("section")) {
-                case "agge":
-                    return mapper.writeValueAsString(bioService.getBioById(l));
-                case "hobb":
-                    return mapper.writeValueAsString(hobbyService.getHobbyById(l));
-                case "prof":
-                    return mapper.writeValueAsString(workService.getWorkById(l));
-                case "heal":
-                    return mapper.writeValueAsString(healthService.getHealthById(l));
-                case "lugg":
-                    return mapper.writeValueAsString(luggageService.getLuggageById(l));
-                case "diss":
-                    return mapper.writeValueAsString(disasterService.getDisasterById(l));
-                case "actions":
-                    return mapper.writeValueAsString(actionService.getActionScriptById(l));
-                default:
-                    return mapper.writeValueAsString(disasterService.getDisasterById(l));
-            }
+            return switch (params.get("section")) {
+                case "agge" -> mapper.writeValueAsString(bioService.getBioById(l));
+                case "hobb" -> mapper.writeValueAsString(hobbyService.getHobbyById(l));
+                case "prof" -> mapper.writeValueAsString(workService.getWorkById(l));
+                case "heal" -> mapper.writeValueAsString(healthService.getHealthById(l));
+                case "lugg" -> mapper.writeValueAsString(luggageService.getLuggageById(l));
+                case "actions" -> mapper.writeValueAsString(actionService.getActionScriptById(l));
+                default -> mapper.writeValueAsString(disasterService.getDisasterById(l));
+            };
         } catch (JacksonException e) {
             log.error(e.getMessage());
         }

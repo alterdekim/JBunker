@@ -235,11 +235,10 @@ public class BunkerBot extends TelegramLongPollingBot {
     }
 
     private void setScriptMessageId(Player p, Integer messageId) {
-        IntStream.range(0, players.size()).forEach(i -> {
-            if( players.get(i).getTelegramId().longValue() == p.getTelegramId().longValue() ) {
-                players.get(i).setScriptMessageId(messageId);
-            }
-        });
+        IntStream.range(0, players.size())
+                .boxed()
+                .filter(i -> players.get(i).getTelegramId().longValue() == p.getTelegramId().longValue())
+                .forEach(i -> players.get(i).setScriptMessageId(messageId));
     }
 
     private String getStringById(Long id) {
@@ -281,46 +280,42 @@ public class BunkerBot extends TelegramLongPollingBot {
                 !getPlayerById(callbackQuery.getFrom().getId()).getIsAnswered() ) {
             Player p = getPlayerById(callbackQuery.getFrom().getId());
             InfoSections ins = p.getInfoSections();
-            switch(BioButtons.fromHash(callbackQuery.getData())) {
+            SectionType curSection = SectionType.fromHash(callbackQuery.getData());
+            switch(curSection) {
                 case GENDER:
                     dayNightFields.appendMessage(String.format(Constants.GENDER_MESAGE, callbackQuery.getFrom().getFirstName(),  getStringById(p.getGender().getGenderTextId()),
                             p.getGender().getCanDie() ? Constants.TRUE : Constants.FALSE,
                             p.getGender().getIsMale() ? Constants.TRUE : Constants.FALSE,
                             p.getGender().getIsFemale() ? Constants.TRUE : Constants.FALSE) + "\n");
-                    ins.setIsGenderShowed(true);
                     break;
                 case HEALTH:
                     dayNightFields.appendMessage(String.format(Constants.HEALTH_MESSAGE, callbackQuery.getFrom().getFirstName(), getStringById(p.getHealth().getTextNameId()),
                             getStringById(p.getHealth().getTextDescId()),
                             (int) (p.getHealth().getHealth_index()*100f),
                             p.getHealth().getIsChildfree() ? Constants.TRUE : Constants.FALSE) + "\n");
-                    ins.setIsHealthShowed(true);
                     break;
                 case AGE:
                     dayNightFields.appendMessage(String.format(Constants.AGE_MESSAGE, callbackQuery.getFrom().getFirstName(), p.getAge()) + "\n");
-                    ins.setIsAgeShowed(true);
                     break;
                 case HOBBY:
                     dayNightFields.appendMessage(String.format(Constants.HOBBY_MESSAGE, callbackQuery.getFrom().getFirstName(),
                             getStringById(p.getHobby().getTextDescId())) + "\n");
-                    ins.setIsHobbyShowed(true);
                     break;
                 case LUGGAGE:
                     dayNightFields.appendMessage(String.format(Constants.LUGG_MESSAGE, callbackQuery.getFrom().getFirstName(),
                             getStringById(p.getLuggage().getTextNameId()),
                             getStringById(p.getLuggage().getTextDescId())) + "\n");
-                    ins.setIsLuggageShowed(true);
                     break;
                 case WORK:
                     dayNightFields.appendMessage(String.format(Constants.WORK_MESSAGE, callbackQuery.getFrom().getFirstName(),
                             getStringById(p.getWork().getTextNameId()),
                             getStringById(p.getWork().getTextDescId())) + "\n");
-                    ins.setIsWorkShowed(true);
                     break;
                 default:
                     processNightScriptButton(p, callbackQuery, callbackQuery.getData());
                     return;
             }
+            ins.pushShowedState(curSection);
             setIsAnswered(callbackQuery.getFrom().getId());
             updateInfoSections(p, ins);
             sendApi(new SendMessage(callbackQuery.getMessage().getChatId()+"", Constants.THANK_YOU));
@@ -404,41 +399,28 @@ public class BunkerBot extends TelegramLongPollingBot {
             message.append(p.getFirstName());
             message.append(":\n");
             InfoSections s = p.getInfoSections();
-            if(s.getIsGenderShowed()) {
-                message.append(String.format(Constants.GENDER_MESAGE, p.getFirstName(),  getStringById(p.getGender().getGenderTextId()),
-                        p.getGender().getCanDie() ? Constants.TRUE : Constants.FALSE,
-                        p.getGender().getIsMale() ? Constants.TRUE : Constants.FALSE,
-                        p.getGender().getIsFemale() ? Constants.TRUE : Constants.FALSE));
+            s.getSections().forEach(s1 -> {
+                switch (s1.getType()) {
+                    case GENDER -> message.append(String.format(Constants.GENDER_MESAGE, p.getFirstName(),  getStringById(p.getGender().getGenderTextId()),
+                            p.getGender().getCanDie() ? Constants.TRUE : Constants.FALSE,
+                            p.getGender().getIsMale() ? Constants.TRUE : Constants.FALSE,
+                            p.getGender().getIsFemale() ? Constants.TRUE : Constants.FALSE));
+                    case AGE -> message.append(String.format(Constants.AGE_MESSAGE, p.getFirstName(), p.getAge()));
+                    case LUGGAGE -> message.append(String.format(Constants.LUGG_MESSAGE, p.getFirstName(),
+                            getStringById(p.getLuggage().getTextNameId()),
+                            getStringById(p.getLuggage().getTextDescId())));
+                    case HEALTH -> message.append(String.format(Constants.HEALTH_MESSAGE, p.getFirstName(), getStringById(p.getHealth().getTextNameId()),
+                            getStringById(p.getHealth().getTextDescId()),
+                            (int) (p.getHealth().getHealth_index()*100f),
+                            p.getHealth().getIsChildfree() ? Constants.TRUE : Constants.FALSE));
+                    case WORK -> message.append(String.format(Constants.WORK_MESSAGE, p.getFirstName(),
+                            getStringById(p.getWork().getTextNameId()),
+                            getStringById(p.getWork().getTextDescId())));
+                    case HOBBY -> message.append(String.format(Constants.HOBBY_MESSAGE, p.getFirstName(),
+                            getStringById(p.getHobby().getTextDescId())));
+                }
                 message.append("\n");
-            }
-            if(s.getIsAgeShowed()) {
-                message.append(String.format(Constants.AGE_MESSAGE, p.getFirstName(), p.getAge()));
-                message.append("\n");
-            }
-            if(s.getIsLuggageShowed()) {
-                message.append(String.format(Constants.LUGG_MESSAGE, p.getFirstName(),
-                        getStringById(p.getLuggage().getTextNameId()),
-                        getStringById(p.getLuggage().getTextDescId())));
-                message.append("\n");
-            }
-            if(s.getIsHealthShowed()) {
-                message.append(String.format(Constants.HEALTH_MESSAGE, p.getFirstName(), getStringById(p.getHealth().getTextNameId()),
-                        getStringById(p.getHealth().getTextDescId()),
-                        (int) (p.getHealth().getHealth_index()*100f),
-                        p.getHealth().getIsChildfree() ? Constants.TRUE : Constants.FALSE));
-                message.append("\n");
-            }
-            if(s.getIsWorkShowed()) {
-                message.append(String.format(Constants.WORK_MESSAGE, p.getFirstName(),
-                        getStringById(p.getWork().getTextNameId()),
-                        getStringById(p.getWork().getTextDescId())));
-                message.append("\n");
-            }
-            if(s.getIsHobbyShowed()) {
-                message.append(String.format(Constants.HOBBY_MESSAGE, p.getFirstName(),
-                        getStringById(p.getHobby().getTextDescId())));
-                message.append("\n");
-            }
+            });
             message.append("\n");
         }
         sendApi(new SendMessage(groupId, message.toString()));
@@ -539,6 +521,7 @@ public class BunkerBot extends TelegramLongPollingBot {
 
         String chatId = update.getMessage().getChatId()+"";
 
+        // TODO: state-based refactoring (reduce IF count)
         if( ( update.getMessage().getText().equals(Commands.SET_GROUP + "@" + getBotUsername()) ||
                 update.getMessage().getText().equals(Commands.SET_GROUP)) &&
                 update.getMessage().getFrom().getId().equals(getMasterId()) && gameState == GameState.NONE) {
@@ -548,6 +531,7 @@ public class BunkerBot extends TelegramLongPollingBot {
 
         if( !chatId.equals(groupId) ) return;
 
+        // TODO: state-based refactoring (reduce IF count)
         if ( (update.getMessage().getText().equals(Commands.START_GAME + "@" + getBotUsername()) ||
                 update.getMessage().getText().equals(Commands.START_GAME) ) &&
                 gameState == GameState.NONE) {

@@ -1,26 +1,30 @@
 package com.alterdekim.javabot.bot;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ToString
 @Getter
-@Setter
 public class InfoSections {
-    private Boolean isGenderShowed;
-    private Boolean isAgeShowed;
-    private Boolean isWorkShowed;
-    private Boolean isLuggageShowed;
-    private Boolean isHobbyShowed;
-    private Boolean isHealthShowed;
+    private final List<InfoSection> sections;
 
     public InfoSections() {
-        this.isAgeShowed = false;
-        this.isLuggageShowed = false;
-        this.isGenderShowed = false;
-        this.isWorkShowed = false;
-        this.isHealthShowed = false;
-        this.isHobbyShowed = false;
+        this.sections = new ArrayList<>();
+    }
+
+    public boolean isShowed(SectionType type) {
+        return this.sections.stream().anyMatch(p -> p.getType() == type);
+    }
+
+    public void pushShowedState(SectionType type) {
+        if(this.isShowed(type)) return;
+        this.sections.add(new InfoSection(type));
+    }
+
+    public void clear() {
+        this.sections.clear();
     }
 }

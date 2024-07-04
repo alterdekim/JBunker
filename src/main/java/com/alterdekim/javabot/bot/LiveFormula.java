@@ -1,6 +1,5 @@
 package com.alterdekim.javabot.bot;
 
-import com.alterdekim.javabot.entities.ColumnType;
 import com.alterdekim.javabot.entities.Synergy;
 import com.alterdekim.javabot.util.Clamp;
 
@@ -37,26 +36,15 @@ public class LiveFormula {
         return Clamp.clamp(i * 1.2d, 0, 1);
     }
 
-    private static Boolean entity(List<Player> players, ColumnType ct, Long eid) {
-        Boolean fb = false;
-        switch (ct) {
-            case Bio:
-                fb = LiveFormula.searchForBio(players, eid);
-                break;
-            case Work:
-                fb = LiveFormula.searchForWork(players, eid);
-                break;
-            case Hobby:
-                fb = LiveFormula.searchForHobby(players, eid);
-                break;
-            case Health:
-                fb = LiveFormula.searchForHealth(players, eid);
-                break;
-            case Luggage:
-                fb = LiveFormula.searchForLuggage(players, eid);
-                break;
-        }
-        return fb;
+    private static Boolean entity(List<Player> players, SectionType ct, Long eid) {
+        return switch (ct) {
+            case GENDER -> LiveFormula.searchForBio(players, eid);
+            case WORK -> LiveFormula.searchForWork(players, eid);
+            case HOBBY -> LiveFormula.searchForHobby(players, eid);
+            case HEALTH -> LiveFormula.searchForHealth(players, eid);
+            case LUGGAGE -> LiveFormula.searchForLuggage(players, eid);
+            default -> false;
+        };
     }
 
     private static Boolean searchForBio(List<Player> players, Long id) {
