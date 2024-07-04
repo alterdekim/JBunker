@@ -201,7 +201,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             players.get(i).setLuggage((Luggage) BotUtils.getRandomFromList(luggs, random));
             players.get(i).setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
             players.get(i).setHealth((Health) BotUtils.getRandomFromList(healths, random));
-            if( (random.nextInt(100) >= 60 || (i == (players.size()-1) && isNoOneHasScripts())) && !scripts.isEmpty() ) {
+            if( (random.nextInt(100) >= 45 || (i == (players.size()-1) && isNoOneHasScripts())) && !scripts.isEmpty() ) {
                 ActionScript asc = (ActionScript) BotUtils.getRandomFromList(scripts, random);
                 scripts.removeIf(p -> p.getId().longValue() == asc.getId().longValue());
                 players.get(i).setScripts(Collections.singletonList(asc));

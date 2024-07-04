@@ -14,7 +14,7 @@ public interface Constants {
     String THANK_YOU = "Спасибо.";
     String ALREADY_IN_GAME = "Ты уже в игре.";
     String CANT_JOIN_NOT_STARTED = "Не могу добавить вас в игру, тк вы не разрешили вам писать сообщения.";
-    String HELP = "Help";
+    String HELP = "Смотрите закреп или обратитесь к администратору.";
     String START_GAME_BTN = "Начать игру";
     String NOT_ADMIN_EXCEPTION = "Вы не администратор";
     String ACCOUNT = "Ваша анкета:\nПол: %s (смертный: %s, мужчина: %s, женщина: %s)\nВозраст: %d\nПрофессия: %s (%s)\nБагаж: %s (%s)\nХобби: %s\nЗдоровье: %s (%s) %d%%, бесплоден: %s";
