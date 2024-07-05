@@ -1,15 +1,11 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" class="h-full bg-white">
     <head>
         <th:block th:insert="~{fragments/header}"></th:block>
-        <link rel="stylesheet" href="/static/css/util.css">
-        <link href="/static/css/sign-in.css" rel="stylesheet">
     </head>
-    <body class="d-flex align-items-center py-4 bg-body-tertiary">
-        <div th:replace="~{fragments/floating_button}"></div>
-
-        <main class="form-signin w-100 m-auto">
-            <div th:if="${param.error}">
+    <body class="h-full">
+        <!--
+        <div th:if="${param.error}">
                 <div class="alert alert-danger" role="alert" th:text="#{login_error}">
                 </div>
             </div>
@@ -17,30 +13,41 @@
                 <div class="alert alert-danger" role="alert" th:text="#{login_error}">
                 </div>
             </div>
+            -->
+        <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+            <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+                <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900" th:text="#{signin}"></h2>
+            </div>
 
-            <form method="post" th:action="@{/login}">
-                <h1 class="h3 mb-3 fw-normal" th:text="#{signin}"></h1>
+            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <form class="space-y-6" th:action="@{/login}" method="POST">
+                    <div>
+                        <label for="username" class="block text-sm font-medium leading-6 text-gray-900" th:text="#{nname}"></label>
+                        <div class="mt-2">
+                            <input id="username" name="username" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
 
-                <div class="form-floating">
-                    <input type="text" name="username" class="form-control" id="floatingInput" placeholder="Username">
-                    <label for="floatingInput" th:text="#{nname}"></label>
-                </div>
-                <div class="form-floating">
-                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
-                    <label for="floatingPassword" th:text="#{pass}"></label>
-                </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium leading-6 text-gray-900" th:text="#{pass}"></label>
+                        <div class="mt-2">
+                            <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
 
-                <div class="form-check text-start my-3">
-                    <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-                    <label class="form-check-label" for="flexCheckDefault" th:text="#{remember}"></label>
-                </div>
-                <button class="btn btn-primary w-100 py-2" type="submit" th:text="#{signin}"></button>
+                    <div>
+                        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" th:text="#{signin}"></button>
+                    </div>
+                </form>
 
-                <p class="mt-3"><a th:href="@{/signup}" class="link-primary" th:text="#{signup}"></a></p>
+                <p class="mt-10 text-center text-sm text-gray-500">
+                    Not a member?
+                    <a th:href="@{/signup}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500" th:text="#{signup}"></a>
+                </p>
 
-                <p class="mb-3 text-body-secondary">&copy; alterdekim 2023</p>
-            </form>
-        </main>
+                <p class="mt-10 text-center text-sm text-gray-500">&copy; alterdekim 2023-2024</p>
+            </div>
+        </div>
         <div th:replace="~{fragments/footer :: div}"></div>
     </body>
 </html>

@@ -1,3 +1,7 @@
+var editor = ace.edit("script_editor");
+editor.setTheme("ace/theme/github");
+editor.session.setMode("ace/mode/lua");
+
 function str_toHex(s) {
     // utf8 to latin1
     var s = unescape(encodeURIComponent(s));
@@ -104,7 +108,8 @@ function form_actions(jobj) {
     get_text_api(jobj.textDescId, function(t) {
         $("#action_desc_text").val(t);
     });
-    $("#action_body_text").val(jobj.scriptBody);
+    //$("#action_body_text").val(jobj.scriptBody);
+    editor.setValue(jobj.scriptBody);
 }
 
 function show_modal_edit(jobj, oid) {
