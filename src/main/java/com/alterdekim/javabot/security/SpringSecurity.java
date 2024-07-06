@@ -37,6 +37,7 @@ public class SpringSecurity {
                                 .requestMatchers("/favicon.ico").permitAll()
                                 .requestMatchers("/signup/**").permitAll()
                                 .requestMatchers("/").permitAll()
+                                .requestMatchers("/script-editor").permitAll()
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
