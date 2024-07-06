@@ -1,7 +1,3 @@
-var editor = ace.edit("script_editor");
-editor.setTheme("ace/theme/github");
-editor.session.setMode("ace/mode/lua");
-
 function str_toHex(s) {
     // utf8 to latin1
     var s = unescape(encodeURIComponent(s));
