@@ -29,6 +29,9 @@ function grab_form() {
 function add_entry_modal() {
     $("#modal_submit_edit").css("display", "none");
     $("#modal_submit_add").css("display", "");
+
+    let _ss = new URL(window.location.href).searchParams.get("section") + "";
+    if( _ss == "actions" ) { window.location.href = "/script-editor?script_id=-1"; }
 }
 
 function form_agge(jobj) {
@@ -150,7 +153,12 @@ function edit_submit_entry(obj) {
 }
 
 function edit_entry(obj) {
-    $.post("/api/edit_entry", "section="+new URL(window.location.href).searchParams.get("section")+"&entry_id="+($(obj).attr("data-id")), function(data, status) {
+    let __ss = new URL(window.location.href).searchParams.get("section") + "";
+    if( __ss == "actions" ) {
+        window.location.href = "/script-editor?script_id=" + ($(obj).attr("data-id"));
+        return;
+    }
+    $.post("/api/edit_entry", "section="+_ss+"&entry_id="+($(obj).attr("data-id")), function(data, status) {
         var jobj = JSON.parse(data);
         show_modal_edit(jobj, $(obj).attr("data-id"));
     });
