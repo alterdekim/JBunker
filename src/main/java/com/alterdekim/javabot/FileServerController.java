@@ -34,14 +34,6 @@ public class FileServerController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @GetMapping("/static/javascript/ace/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> serveFileAce(@PathVariable String filename) {
-        Resource file = storageService.loadAsResource("static/javascript/ace/" + filename);
-        return ResponseEntity.ok().contentType(new MediaType("text", "javascript")).header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-    }
-
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();

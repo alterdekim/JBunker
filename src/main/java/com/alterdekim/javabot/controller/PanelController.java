@@ -168,6 +168,12 @@ public class PanelController {
         return "panel";
     }
 
+    @GetMapping("/script-editor")
+    public String scriptEditorAdmin(Model model, @RequestHeader("User-Agent") String uagent, @RequestHeader("Accept") String accepth) {
+        model.addAttribute("is_mobile", new UAgentInfo(uagent, accepth).detectSmartphone());
+        return "script-editor";
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
