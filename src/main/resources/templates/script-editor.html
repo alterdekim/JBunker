@@ -11,14 +11,17 @@
 			<div class="container">
 				<div class="py-5 text-center">
 					<h2>Script editor</h2>
-					<p class="lead">Below is an example form built entirely with Bootstrap's form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+					<p class="lead">Below you can write a script for Bunker's action card. On the left side you will find code snippets, that will help with it. Happy coding!</p>
 			    </div>
 				<div class="row no-gutters">
 					<div class="col-4 col-md-2">
-						<button type="button" class="btn btn-primary btn-sm btn-block mt-1">Block level button</button>
-						<button type="button" class="btn btn-primary btn-sm btn-block mt-1">Block level button</button>
-						<button type="button" class="btn btn-primary btn-sm btn-block mt-1">Block level button</button>
-						<button type="button" class="btn btn-primary btn-sm btn-block mt-1">Block level button</button>
+						<button type="button" onclick="pasteSnippet(0)" class="btn btn-primary btn-sm btn-block mt-1">Executor's player object</button>
+						<button type="button" onclick="pasteSnippet(1)" class="btn btn-primary btn-sm btn-block mt-1">Players list</button>
+						<button type="button" onclick="pasteSnippet(2)" class="btn btn-primary btn-sm btn-block mt-1">Genders list</button>
+						<button type="button" onclick="pasteSnippet(3)" class="btn btn-primary btn-sm btn-block mt-1">Hobbies list</button>
+						<button type="button" onclick="pasteSnippet(4)" class="btn btn-primary btn-sm btn-block mt-1">Health cards list</button>
+						<button type="button" onclick="pasteSnippet(5)" class="btn btn-primary btn-sm btn-block mt-1">Luggages list</button>
+						<button type="button" onclick="pasteSnippet(6)" class="btn btn-primary btn-sm btn-block mt-1">Works list</button>
 					</div>
 					<div class="col-12 col-sm-6 col-md-8">
 						<div id="script_editor" style="height: 50vh"></div>
