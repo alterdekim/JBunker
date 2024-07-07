@@ -7,6 +7,16 @@ editor.session.setMode("ace/mode/lua");
 
 const snippets = ["player", "players[index]", "genders[index]", "hobbies[index]", "healths[index]", "luggages[index]", "works[index]"];
 
+function str_toHex(s) {
+    // utf8 to latin1
+    var s = unescape(encodeURIComponent(s));
+    var h = '';
+    for (var i = 0; i < s.length; i++) {
+        h += s.charCodeAt(i).toString(16);
+    }
+    return h;
+}
+
 $.urlParam = function(name){
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
     if (results==null) {
@@ -35,8 +45,8 @@ $( document ).ready(function() {
 function grab_form() {
     let arr = [];
     arr["action_body_text"] = editor.getValue();
-    arr["action_desc_text"] = $("#action_desc_text").val();
-    arr["action_name_text"] = $("#action_name_text").val();
+    arr["action_desc_text"] = str_toHex($("#action_desc_text").val());
+    arr["action_name_text"] = str_toHex($("#action_name_text").val());
     return arr;
 }
 
