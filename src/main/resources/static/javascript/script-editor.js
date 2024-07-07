@@ -7,7 +7,7 @@ editor.session.setMode("ace/mode/lua");
 
 const snippets = ["player", "players[index]", "genders[index]", "hobbies[index]", "healths[index]", "luggages[index]", "works[index]"];
 
-urlParam = function(name){
+$.urlParam = function(name){
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
     if (results==null) {
        return null;
@@ -26,6 +26,8 @@ function getActionScript() {
     });
 }
 
-if ($.urlParam("script_id") != "-1") {
-    getActionScript();
-}
+$( document ).ready(function() {
+    if ($.urlParam("script_id") != "-1") {
+        getActionScript();
+    }
+});
