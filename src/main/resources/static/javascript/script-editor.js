@@ -43,7 +43,7 @@ $( document ).ready(function() {
 });
 
 function grab_form() {
-    let arr = [];
+    let arr = {};
     arr["action_body_text"] = editor.getValue();
     arr["action_desc_text"] = str_toHex($("#action_desc_text").val());
     arr["action_name_text"] = str_toHex($("#action_name_text").val());
