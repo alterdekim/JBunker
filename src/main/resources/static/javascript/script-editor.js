@@ -20,7 +20,7 @@ function pasteSnippet(index) {
 }
 
 function getActionScript() {
-    $.post("/api/edit_entry", "section="+_ss+"&entry_id="+($.urlParam("script_id")), function(data, status) {
+    $.post("/api/edit_entry", "section=actions&entry_id="+($.urlParam("script_id")), function(data, status) {
         var jobj = JSON.parse(data);
         editor.setValue(jobj.scriptBody);
     });
