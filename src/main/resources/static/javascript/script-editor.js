@@ -31,3 +31,27 @@ $( document ).ready(function() {
         getActionScript();
     }
 });
+
+function grab_form() {
+    let arr = [];
+    arr["action_body_text"] = editor.getValue();
+    arr["action_desc_text"] = $("#action_desc_text").val();
+    arr["action_name_text"] = $("#action_name_text").val();
+    return arr;
+}
+
+function add_entry() {
+   $.ajax({
+    url: "/api/add_entry",
+    type: "POST",
+    data: grab_form()
+   }).done(function() {
+       window.location.href = "/panel?section=actions";
+   });
+}
+
+function edit_submit_entry() {
+    $.post("/api/remove_entry", "section=actions&entry_id="+($.urlParam("script_id")), function(data, status) {
+        add_entry();
+    });
+}
