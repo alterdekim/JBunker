@@ -24,6 +24,14 @@
 						<button type="button" onclick="pasteSnippet(6)" class="btn btn-primary btn-sm btn-block mt-1">Works list</button>
 					</div>
 					<div class="col-12 col-sm-6 col-md-8">
+						<div class="mb-3">
+							<label for="action_name_text" class="col-form-label" th:text="#{inlaname}"></label>
+							<input type="text" class="form-control" id="action_name_text" name="action_name_text">
+						</div>
+						<div class="mb-3">
+							<label for="action_desc_text" class="col-form-label" th:text="#{inladesc}"></label>
+							<input type="text" class="form-control" id="action_desc_text" name="action_desc_text">
+						</div>
 						<div id="script_editor" style="height: 50vh"></div>
 					</div>
 				</div>
