@@ -15,13 +15,27 @@
 			    </div>
 				<div class="row no-gutters">
 					<div class="col-4 col-md-2">
-						<button type="button" onclick="pasteSnippet(0)" class="btn btn-primary btn-sm btn-block mt-1">Executor's player object</button>
-						<button type="button" onclick="pasteSnippet(1)" class="btn btn-primary btn-sm btn-block mt-1">Players list</button>
-						<button type="button" onclick="pasteSnippet(2)" class="btn btn-primary btn-sm btn-block mt-1">Genders list</button>
-						<button type="button" onclick="pasteSnippet(3)" class="btn btn-primary btn-sm btn-block mt-1">Hobbies list</button>
-						<button type="button" onclick="pasteSnippet(4)" class="btn btn-primary btn-sm btn-block mt-1">Health cards list</button>
-						<button type="button" onclick="pasteSnippet(5)" class="btn btn-primary btn-sm btn-block mt-1">Luggages list</button>
-						<button type="button" onclick="pasteSnippet(6)" class="btn btn-primary btn-sm btn-block mt-1">Works list</button>
+						<div class="row">
+							<button type="button" onclick="pasteSnippet(0)" class="btn btn-primary btn-sm btn-block mt-1">Executor's player object</button>
+						</div>
+						<div class="row">
+							<button type="button" onclick="pasteSnippet(1)" class="btn btn-primary btn-sm btn-block mt-1">Players list</button>
+						</div>
+						<div class="row">
+							<button type="button" onclick="pasteSnippet(2)" class="btn btn-primary btn-sm btn-block mt-1">Genders list</button>
+						</div>
+						<div class="row">
+							<button type="button" onclick="pasteSnippet(3)" class="btn btn-primary btn-sm btn-block mt-1">Hobbies list</button>
+						</div>
+						<div class="row">
+							<button type="button" onclick="pasteSnippet(4)" class="btn btn-primary btn-sm btn-block mt-1">Health cards list</button>
+						</div>
+						<div class="row">
+							<button type="button" onclick="pasteSnippet(5)" class="btn btn-primary btn-sm btn-block mt-1">Luggages list</button>
+						</div>
+						<div class="row">
+							<button type="button" onclick="pasteSnippet(6)" class="btn btn-primary btn-sm btn-block mt-1">Works list</button>
+						</div>
 					</div>
 					<div class="col-12 col-sm-6 col-md-8">
 						<div class="input-group-sm mb-3">
@@ -32,7 +46,7 @@
 							<label for="action_desc_text" class="col-form-label" th:text="#{inladesc}"></label>
 							<input type="text" class="form-control" id="action_desc_text" name="action_desc_text">
 						</div>
-						<button type="button" id="submit_add" onclick="" class="btn btn-primary" th:text="#{adddbtn}"></button>
+						<button type="button" id="submit_add" onclick="" class="btn btn-primary mb-3" th:text="#{adddbtn}"></button>
 						<div id="script_editor" style="height: 50vh"></div>
 					</div>
 				</div>
