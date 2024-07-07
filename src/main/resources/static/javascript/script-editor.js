@@ -62,7 +62,11 @@ function add_entry() {
 }
 
 function edit_submit_entry() {
-    $.post("/api/remove_entry", "section=actions&entry_id="+($.urlParam("script_id")), function(data, status) {
+    if ($.urlParam("script_id") != "-1") {
+        $.post("/api/remove_entry", "section=actions&entry_id="+($.urlParam("script_id")), function(data, status) {
+            add_entry();
+        });
+    } else {
         add_entry();
-    });
+    }
 }
