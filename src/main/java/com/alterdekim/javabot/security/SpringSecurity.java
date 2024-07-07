@@ -37,7 +37,7 @@ public class SpringSecurity {
                                 .requestMatchers("/favicon.ico").permitAll()
                                 .requestMatchers("/signup/**").permitAll()
                                 .requestMatchers("/").permitAll()
-                                .requestMatchers("/script-editor").permitAll()
+                                .requestMatchers("/script-editor").hasAnyAuthority("ROLE_ADMIN")
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
