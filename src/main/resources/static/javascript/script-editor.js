@@ -29,9 +29,21 @@ function pasteSnippet(index) {
     editor.insert(snippets[index]);
 }
 
+function get_text_api(tid, cb) {
+    $.post("/api/getTextById", "entry_id="+tid, function(data, status) {
+        cb(data);
+    });
+}
+
 function getActionScript() {
     $.post("/api/edit_entry", "section=actions&entry_id="+($.urlParam("script_id")), function(data, status) {
         var jobj = JSON.parse(data);
+        get_text_api(jobj.textNameId, function(t) {
+            $("#action_name_text").val(t);
+        });
+        get_text_api(jobj.textDescId, function(t) {
+            $("#action_desc_text").val(t);
+        });
         editor.setValue(jobj.scriptBody);
     });
 }
