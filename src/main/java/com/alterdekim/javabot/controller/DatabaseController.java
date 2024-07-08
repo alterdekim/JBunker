@@ -196,6 +196,20 @@ public class DatabaseController {
         return "ok";
     }
 
+    @PostMapping("/api/accept_script_request")
+    public String accept_script_request(@RequestParam Map<String, String> params) {
+        long entry_id = Long.parseLong(params.get("entry_id"));
+        ActionScriptRequest req = actionRequestService.getActionScriptById(entry_id);
+        String scriptBody = req.getScriptBody();
+        String name_text = req.getTextName();
+        TextDataVal t1 = textDataValService.save(new TextDataVal(name_text));
+        String desc_text = req.getTextDesc();
+        TextDataVal t2 = textDataValService.save(new TextDataVal(desc_text));
+        actionService.saveScript(new ActionScript(t1.getId(), t2.getId(), scriptBody));
+        actionRequestService.removeById(entry_id);
+        return "ok";
+    }
+
     @PostMapping("/public/api/add_entry_request")
     public String add_entry_request(@RequestParam Map<String, String> params) {
         saveActionRequest(params);
@@ -213,6 +227,7 @@ public class DatabaseController {
             case "heal" -> healthService.removeById(entry_id);
             case "prof" -> workService.removeById(entry_id);
             case "actions" -> actionService.removeById(entry_id);
+            case "script_request" -> actionRequestService.removeById(entry_id);
             default -> disasterService.removeById(entry_id);
         }
         return "ok";

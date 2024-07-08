@@ -170,6 +170,12 @@ function get_text_api(tid, cb) {
     });
 }
 
+function accept_script_request(obj) {
+    $.post("/api/accept_script_request", "entry_id="+($(obj).attr("data-id")), function(data, status) {
+        window.location.reload();
+    });
+}
+
 function remove_entry(obj) {
     $.post("/api/remove_entry", "section="+new URL(window.location.href).searchParams.get("section")+"&entry_id="+($(obj).attr("data-id")), function(data, status) {
         window.location.reload();
