@@ -323,7 +323,8 @@ public class BunkerBot extends TelegramLongPollingBot {
             sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", callbackQuery.getMessage().getMessageId()));
             if( p.getScriptMessageId() != null) sendApi(new DeleteMessage(callbackQuery.getMessage().getChatId()+"", p.getScriptMessageId()));
             sendApi(new SendMessage(groupId, String.format(Constants.PRESSED_NIGHT, callbackQuery.getFrom().getFirstName())));
-            if( isAllAnswered() && dayNightFields.getTurnCount() >= 3 ) {
+            if( !isAllAnswered() ) return;
+            if( dayNightFields.getTurnCount() >= 3 ) {
                 doDay();
                 return;
             }
