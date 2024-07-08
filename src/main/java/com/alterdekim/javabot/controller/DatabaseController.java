@@ -30,6 +30,7 @@ public class DatabaseController {
     private final DisasterService disasterService;
     private final SynergyService synergyService;
     private final ActionScriptsService actionService;
+    private final ActionRequestService actionRequestService;
 
     private void saveGender(Map<String, String> params) {
         Boolean canDie = Boolean.parseBoolean(params.get("canDie"));
@@ -114,6 +115,13 @@ public class DatabaseController {
         actionService.saveScript(new ActionScript(t1.getId(), t2.getId(), scriptBody));
     }
 
+    private void saveActionRequest(Map<String, String> params) {
+        String scriptBody = params.get("action_body_text");
+        String name_text = new String(HashUtils.decodeHexString(params.get("action_name_text")));
+        String desc_text = new String(HashUtils.decodeHexString(params.get("action_desc_text")));
+        actionRequestService.saveScript(new ActionScriptRequest(name_text, desc_text, scriptBody));
+    }
+
     @PostMapping("/api/remove_synergy")
     public String remove_synergy(@RequestParam Map<String, String> params) {
         long id = Long.parseLong(params.get("synergy_id"));
@@ -185,6 +193,12 @@ public class DatabaseController {
             case "actions" -> saveAction(params);
             default -> saveDiss(params);
         }
+        return "ok";
+    }
+
+    @PostMapping("/public/api/add_entry_request")
+    public String add_entry_request(@RequestParam Map<String, String> params) {
+        saveActionRequest(params);
         return "ok";
     }
 

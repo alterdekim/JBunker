@@ -51,10 +51,10 @@ function getActionScript() {
 $( document ).ready(function() {
     if ($.urlParam("script_id") != "-1") {
         getActionScript();
-        $(".dropdown-item").each(function() {
-            $(this).attr("href", $(this).attr("href")+"&script_id="+($.urlParam("script_id")));
-        });
     }
+    $(".dropdown-item").each(function() {
+        $(this).attr("href", $(this).attr("href")+"&script_id="+($.urlParam("script_id")));
+    });
 });
 
 function grab_form() {

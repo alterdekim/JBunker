@@ -29,6 +29,7 @@ public class PanelController {
     private final TextDataValService textDataValService;
     private final DisasterService disasterService;
     private final ActionScriptsServiceImpl scriptsService;
+    private final ActionRequestServiceImpl actionRequestService;
 
     private List<Card> dissToCards() {
         List<Disaster> bios = disasterService.getAllDisasters();
@@ -135,6 +136,21 @@ public class PanelController {
         return cards;
     }
 
+    private List<Card> requestsToCards() {
+        List<ActionScriptRequest> scriptRequests = actionRequestService.getAllActionScripts();
+        List<Card> cards = new ArrayList<>();
+        for( ActionScriptRequest b : scriptRequests ) {
+            Card card = new Card();
+            card.setId(b.getId());
+            card.setTitle(b.getTextName());
+            card.setBody(new ArrayList<>(Arrays.asList(b.getScriptBody().split("\n"))));
+            cards.add(card);
+        }
+        cards.sort(Comparator.comparing(Card::getId));
+        Collections.reverse(cards);
+        return cards;
+    }
+
     @GetMapping("/panel")
     public String panelPage(Model model, @RequestHeader("User-Agent") String uagent, @RequestHeader("Accept") String accepth, @RequestParam(value = "section", defaultValue = "diss") String section) {
         model.addAttribute("is_mobile", new UAgentInfo(uagent, accepth).detectSmartphone());
@@ -163,6 +179,9 @@ public class PanelController {
                 break;
             case "actions":
                 model.addAttribute("cards", actionsToCards() );
+                break;
+            case "script_request":
+                model.addAttribute("cards", requestsToCards() );
                 break;
         }
         return "panel";

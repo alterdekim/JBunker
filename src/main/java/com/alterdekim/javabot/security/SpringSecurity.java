@@ -31,6 +31,7 @@ public class SpringSecurity {
                         authorize
                                 .requestMatchers("/panel").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers("/api/**").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers("/public/**").permitAll()
                                 .requestMatchers("/static/**").permitAll()
                                 .requestMatchers("/access-denied").permitAll()
                                 .requestMatchers("/signup").permitAll()
