@@ -193,6 +193,12 @@ public class PanelController {
         return "script-editor";
     }
 
+    @GetMapping("/editor-public")
+    public String scriptEditorPublic(Model model, @RequestHeader("User-Agent") String uagent, @RequestHeader("Accept") String accepth) {
+        model.addAttribute("is_mobile", new UAgentInfo(uagent, accepth).detectSmartphone());
+        return "editor-public";
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor

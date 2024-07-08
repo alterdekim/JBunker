@@ -39,6 +39,7 @@ public class SpringSecurity {
                                 .requestMatchers("/signup/**").permitAll()
                                 .requestMatchers("/").permitAll()
                                 .requestMatchers("/script-editor").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers("/editor-public").permitAll()
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
