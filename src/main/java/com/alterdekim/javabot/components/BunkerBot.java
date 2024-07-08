@@ -202,15 +202,13 @@ public class BunkerBot extends TelegramLongPollingBot {
             players.get(i).setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
             players.get(i).setHealth((Health) BotUtils.getRandomFromList(healths, random));
             if( (random.nextInt(100) >= 45 || (i == (players.size()-1) && isNoOneHasScripts())) && !scripts.isEmpty() ) {
-                //ActionScript asc = (ActionScript) BotUtils.getRandomFromList(scripts, random);
-                ActionScript asc = scripts.get(scripts.size()-1);
+                ActionScript asc = (ActionScript) BotUtils.getRandomFromList(scripts, random);
+                //ActionScript asc = scripts.get(scripts.size()-1);
                 scripts.removeIf(p -> p.getId().longValue() == asc.getId().longValue());
                 players.get(i).setScripts(Collections.singletonList(asc));
             } else {
                 players.get(i).setScripts(new ArrayList<>());
             }
-            SendMessage sendMessage = new SendMessage(players.get(i).getTelegramId()+"", BotAccountProfileGenerator.build(textDataValService, players.get(i)));
-            sendApi(sendMessage);
         }
         doNight();
     }
@@ -221,7 +219,9 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.dayNightFields.setPoll(new HashMap<>());
         this.dayNightFields.setTurnCount(this.dayNightFields.getTurnCount()+1);
         for( Player p : players ) {
-            SendMessage sendMessage = new SendMessage(p.getTelegramId()+"", Constants.SHOW_TIME);
+            SendMessage sendMessage = new SendMessage(p.getTelegramId()+"", BotAccountProfileGenerator.build(textDataValService, p));
+            sendApi(sendMessage);
+            sendMessage = new SendMessage(p.getTelegramId()+"", Constants.SHOW_TIME);
             sendMessage.setReplyMarkup(BotUtils.getShowKeyboard(p.getInfoSections()));
             sendApi(sendMessage);
             if( p.getScripts().isEmpty() ) continue;
