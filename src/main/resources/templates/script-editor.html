@@ -10,54 +10,54 @@
 		<main>
 			<div class="container">
 				<div class="py-5 text-center">
-					<h2>Script editor</h2>
-					<p class="lead">Below you can write a script for Bunker's action card. On the left side you will find code snippets, that will help with it. Happy coding!</p>
+					<h2 th:text="#{scrieditti}"></h2>
+					<p class="lead" th:text="#{scrieditde}"></p>
 			    </div>
 				<div class="row no-gutters">
 					<div class="col-4 col-md-2">
 						<div class="row">
-							<button type="button" onclick="pasteSnippet(0)" class="btn btn-primary btn-sm btn-block mt-1">Executor's player object</button>
+							<button type="button" onclick="pasteSnippet(0)" class="btn btn-primary btn-sm btn-block mt-1" th:text="#{exeplayob}"></button>
 						</div>
 						<div class="row">
-							<button type="button" onclick="pasteSnippet(1)" class="btn btn-primary btn-sm btn-block mt-1">Players list</button>
+							<button type="button" onclick="pasteSnippet(1)" class="btn btn-primary btn-sm btn-block mt-1" th:text="#{glplaylis}"></button>
 						</div>
 						<div class="row">
-							<button type="button" onclick="pasteSnippet(2)" class="btn btn-primary btn-sm btn-block mt-1">Genders list</button>
+							<button type="button" onclick="pasteSnippet(2)" class="btn btn-primary btn-sm btn-block mt-1" th:text="#{glgenlist}"></button>
 						</div>
 						<div class="row">
-							<button type="button" onclick="pasteSnippet(3)" class="btn btn-primary btn-sm btn-block mt-1">Hobbies list</button>
+							<button type="button" onclick="pasteSnippet(3)" class="btn btn-primary btn-sm btn-block mt-1" th:text="#{glhobblist}"></button>
 						</div>
 						<div class="row">
-							<button type="button" onclick="pasteSnippet(4)" class="btn btn-primary btn-sm btn-block mt-1">Health cards list</button>
+							<button type="button" onclick="pasteSnippet(4)" class="btn btn-primary btn-sm btn-block mt-1" th:text="#{glheallist}"></button>
 						</div>
 						<div class="row">
-							<button type="button" onclick="pasteSnippet(5)" class="btn btn-primary btn-sm btn-block mt-1">Luggages list</button>
+							<button type="button" onclick="pasteSnippet(5)" class="btn btn-primary btn-sm btn-block mt-1" th:text="#{gllugglist}"></button>
 						</div>
 						<div class="row">
-							<button type="button" onclick="pasteSnippet(6)" class="btn btn-primary btn-sm btn-block mt-1">Works list</button>
+							<button type="button" onclick="pasteSnippet(6)" class="btn btn-primary btn-sm btn-block mt-1" th:text="#{glworklist}"></button>
 						</div>
 						<div class="row">
 							<div class="dropdown mt-1 w-100" style="padding: 0;">
 								<button class="btn btn-sm btn-secondary dropdown-toggle w-100" type="button" id="langDropDown" data-bs-toggle="dropdown" aria-expanded="false">
-									Language
+									[[#{langl}]]
 								</button>
 								<ul class="dropdown-menu w-100" aria-labelledby="langDropDown">
-									<li><a class="dropdown-item" href="?lang=en">English</a></li>
-									<li><a class="dropdown-item" href="?lang=ru">Russian</a></li>
+									<li><a class="dropdown-item" href="?lang=en" th:text="#{elang}"></a></li>
+									<li><a class="dropdown-item" href="?lang=ru" th:text="#{rlang}"></a></li>
 								</ul>
 							</div>
 						</div>
 					</div>
 					<div class="col-12 col-sm-6 col-md-8">
-						<div class="input-group-sm mb-3">
+						<div class="input-group-sm mb-1">
 							<label for="action_name_text" class="col-form-label" th:text="#{inlaname}"></label>
 							<input type="text" class="form-control" id="action_name_text" name="action_name_text">
 						</div>
-						<div class="input-group-sm mb-3">
+						<div class="input-group-sm mb-1">
 							<label for="action_desc_text" class="col-form-label" th:text="#{inladesc}"></label>
 							<input type="text" class="form-control" id="action_desc_text" name="action_desc_text">
 						</div>
-						<button type="button" id="submit_add" onclick="edit_submit_entry()" class="btn btn-primary mb-3" th:text="#{edditbtn}"></button>
+						<button type="button" id="submit_add" onclick="edit_submit_entry()" class="btn btn-primary mb-1" th:text="#{edditbtn}/#{adddbtn}"></button>
 						<div id="script_editor" style="height: 50vh"></div>
 					</div>
 				</div>
