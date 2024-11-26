@@ -105,7 +105,7 @@
                 </div>
             </th:block>
             <th:block th:unless="${is_mobile}">
-                <div class="d-flex justify-content-start text-center">
+                <div class="container justify-content-start text-center">
                     <div class="col">
                         <div class="card mt-2">
                             <div class="card-body">
@@ -113,27 +113,31 @@
                             </div>
                         </div>
                     </div>
-                    <th:block th:each="cc: ${cards}">
-                        <div class="col">
-                            <div class="card mt-2">
-                                <div class="card-body">
-                                    <h5 class="card-title" th:text="${cc.title}"></h5>
-                                    <p class="card-text">
-                                    <ul th:each="ll: ${cc.body}">
-                                        <li th:text="${ll}"></li>
-                                    </ul>
-                                    </p>
-                                    <th:block th:unless="${section == 'script_request'}">
-                                        <a th:unless="${section == 'actions'}" href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal_syn" onclick="show_synergies_modal(this)" class="btn btn-primary" th:text="#{eddittsynn}"></a>
-                                        <a href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal" onclick="edit_entry(this)" class="btn btn-primary" th:text="#{edditbtn}"></a>
-                                        <a href="#" th:data-id="${cc.id}" onclick="remove_entry(this)" class="btn btn-danger" th:text="#{remombtn}"></a>
-                                    </th:block>
-                                    <th:block th:if="${section == 'script_request'}">
-                                        <a href="#" th:data-id="${cc.id}" onclick="accept_script_request(this)" class="btn btn-success" th:text="#{acceptbtnreq}"></a>
-                                        <a href="#" th:data-id="${cc.id}" onclick="remove_entry(this)" class="btn btn-danger" th:text="#{remombtn}"></a>
-                                    </th:block>
+                    <th:block th:each="cp: ${cards}">
+                        <div class="row">
+                            <th:block th:each="cc: ${cp}">
+                                <div class="col">
+                                    <div class="card mt-2">
+                                        <div class="card-body">
+                                            <h5 class="card-title" th:text="${cc.title}"></h5>
+                                            <p class="card-text">
+                                            <ul th:each="ll: ${cc.body}">
+                                                <li th:text="${ll}"></li>
+                                            </ul>
+                                            </p>
+                                            <th:block th:unless="${section == 'script_request'}">
+                                                <a th:unless="${section == 'actions'}" href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal_syn" onclick="show_synergies_modal(this)" class="btn btn-primary" th:text="#{eddittsynn}"></a>
+                                                <a href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal" onclick="edit_entry(this)" class="btn btn-primary" th:text="#{edditbtn}"></a>
+                                                <a href="#" th:data-id="${cc.id}" onclick="remove_entry(this)" class="btn btn-danger" th:text="#{remombtn}"></a>
+                                            </th:block>
+                                            <th:block th:if="${section == 'script_request'}">
+                                                <a href="#" th:data-id="${cc.id}" onclick="accept_script_request(this)" class="btn btn-success" th:text="#{acceptbtnreq}"></a>
+                                                <a href="#" th:data-id="${cc.id}" onclick="remove_entry(this)" class="btn btn-danger" th:text="#{remombtn}"></a>
+                                            </th:block>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </th:block>
                         </div>
                     </th:block>
                 </div>

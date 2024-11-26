@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Controller
@@ -151,37 +153,48 @@ public class PanelController {
         return cards;
     }
 
+    private List<List<Card>> toPairs(List<Card> cards) {
+        List<List<Card>> l = IntStream.range(0, cards.size())
+                .filter(i -> i % 2 == 0 && i + 1 < cards.size())
+                .boxed()
+                .map(i -> List.of(cards.get(i), cards.get(i+1)))
+                .collect(Collectors.toList());
+        if( cards.size() % 2 == 1 ) { l.add(Collections.singletonList(cards.get(cards.size()-1))); }
+        return l;
+    }
+
     @GetMapping("/panel")
     public String panelPage(Model model, @RequestHeader("User-Agent") String uagent, @RequestHeader("Accept") String accepth, @RequestParam(value = "section", defaultValue = "diss") String section) {
-        model.addAttribute("is_mobile", new UAgentInfo(uagent, accepth).detectSmartphone());
+        boolean is_mobile = new UAgentInfo(uagent, accepth).detectSmartphone();
+        model.addAttribute("is_mobile", is_mobile);
         model.addAttribute("section", section);
         switch (section) {
             case "lugg":
-                model.addAttribute( "cards", luggageToCards() );
+                model.addAttribute( "cards", is_mobile ? luggageToCards() : toPairs(luggageToCards()) );
                 break;
             case "heal":
-                model.addAttribute("cards", healToCards() );
+                model.addAttribute("cards", is_mobile ? healToCards() : toPairs(healToCards()) );
                 break;
             case "prof":
-                model.addAttribute("cards", workToCards() );
+                model.addAttribute("cards", is_mobile ? workToCards() : toPairs(workToCards()) );
                 break;
             case "hobb":
-                model.addAttribute("cards", hobbyToCards() );
+                model.addAttribute("cards", is_mobile ? hobbyToCards() : toPairs(hobbyToCards()) );
                 break;
             case "agge":
-                model.addAttribute("cards", bioToCards() );
+                model.addAttribute("cards", is_mobile ? bioToCards() : toPairs(bioToCards()) );
                 break;
             case "diss":
-                model.addAttribute("cards", dissToCards() );
+                model.addAttribute("cards", is_mobile ? dissToCards() : toPairs(dissToCards()) );
                 break;
             case "stats":
                 // !
                 break;
             case "actions":
-                model.addAttribute("cards", actionsToCards() );
+                model.addAttribute("cards", is_mobile ? actionsToCards() : toPairs(actionsToCards()) );
                 break;
             case "script_request":
-                model.addAttribute("cards", requestsToCards() );
+                model.addAttribute("cards", is_mobile ? requestsToCards() : toPairs(requestsToCards()) );
                 break;
         }
         return "panel";
