@@ -32,6 +32,7 @@ public class PanelController {
     private final DisasterService disasterService;
     private final ActionScriptsServiceImpl scriptsService;
     private final ActionRequestServiceImpl actionRequestService;
+    private final GameThemeServiceImpl gameThemeService;
 
     private List<Card> dissToCards() {
         List<Disaster> bios = disasterService.getAllDisasters();
@@ -153,6 +154,19 @@ public class PanelController {
         return cards;
     }
 
+    private List<Card> themesToCards() {
+        List<GameTheme> themeList = gameThemeService.getAllGameThemes();
+        List<Card> cards = new ArrayList<>();
+        for( GameTheme theme : themeList ) {
+            Card card = new Card();
+            card.setId(theme.getId());
+            card.setTitle(textDataValService.getTextDataValById(theme.getTextNameId()).getText());
+            card.setBody(new ArrayList<>());
+            cards.add(card);
+        }
+        return cards;
+    }
+
     private List<List<Card>> toPairs(List<Card> cards) {
         List<List<Card>> l = IntStream.range(0, cards.size())
                 .filter(i -> i % 2 == 0 && i + 1 < cards.size())
@@ -195,6 +209,9 @@ public class PanelController {
                 break;
             case "script_request":
                 model.addAttribute("cards", is_mobile ? requestsToCards() : toPairs(requestsToCards()) );
+                break;
+            case "themes":
+                model.addAttribute("cards", is_mobile ? themesToCards() : toPairs(themesToCards()));
                 break;
         }
         return "panel";
