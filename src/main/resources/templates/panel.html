@@ -331,6 +331,12 @@
                                             <input type="text" class="form-control" id="diss_desc_text" name="diss_desc_text">
                                         </div>
                                     </th:block>
+                                    <th:block th:case="themes">
+                                        <div class="mb-3">
+                                            <label for="theme_name_text" class="col-form-label" th:text="#{inlaname}"></label>
+                                            <input type="text" class="form-control" id="theme_name_text" name="theme_name_text">
+                                        </div>
+                                    </th:block>
                                 </th:block>
                             </form>
                         </div>
