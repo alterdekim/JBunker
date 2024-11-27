@@ -1,5 +1,6 @@
 package com.alterdekim.javabot.service;
 
+import com.alterdekim.javabot.bot.SectionType;
 import com.alterdekim.javabot.entities.Synergy;
 import com.alterdekim.javabot.repository.SynergyRepository;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,10 @@ public class SynergyServiceImpl implements SynergyService {
     @Override
     public List<Synergy> getAllSynergies() {
         return repository.findAll();
+    }
+
+    @Override
+    public void removeByEntityId(Long entityId, SectionType sectionType) {
+        repository.deleteByEntityId(entityId, sectionType.ordinal()+1);
     }
 }

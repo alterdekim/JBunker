@@ -325,11 +325,11 @@ public class DatabaseController {
         String section = params.get("section");
         long entry_id = Long.parseLong(params.get("entry_id"));
         switch (section) {
-            case "agge" -> bioService.removeById(entry_id);
-            case "hobb" -> hobbyService.removeById(entry_id);
-            case "lugg" -> luggageService.removeById(entry_id);
-            case "heal" -> healthService.removeById(entry_id);
-            case "prof" -> workService.removeById(entry_id);
+            case "agge" -> { bioService.removeById(entry_id); synergyService.removeByEntityId(entry_id, SectionType.AGE); }
+            case "hobb" -> { hobbyService.removeById(entry_id); synergyService.removeByEntityId(entry_id, SectionType.HOBBY); }
+            case "lugg" -> { luggageService.removeById(entry_id); synergyService.removeByEntityId(entry_id, SectionType.LUGGAGE); }
+            case "heal" -> { healthService.removeById(entry_id); synergyService.removeByEntityId(entry_id, SectionType.HEALTH); }
+            case "prof" -> { workService.removeById(entry_id); synergyService.removeByEntityId(entry_id, SectionType.WORK); }
             case "actions" -> actionService.removeById(entry_id);
             case "script_request" -> actionRequestService.removeById(entry_id);
             case "themes" -> themeService.removeById(entry_id);
