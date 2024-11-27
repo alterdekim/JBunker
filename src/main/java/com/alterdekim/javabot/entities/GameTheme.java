@@ -18,6 +18,9 @@ public class GameTheme {
     @Column(nullable = false)
     private Long textNameId;
 
+    @Column(nullable = false)
+    private Boolean isSelected = true;
+
     public GameTheme(Long textNameId) {
         this.textNameId = textNameId;
     }

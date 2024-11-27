@@ -37,4 +37,7 @@ public class Bio {
 
     @Column(nullable = false)
     private Long genderTextId;
+
+    @Column(nullable = false)
+    private Long theme = 1L;
 }

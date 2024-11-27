@@ -32,4 +32,9 @@ public class GameThemeServiceImpl implements GameThemeService {
     public void saveGameTheme(GameTheme gameTheme) {
         repository.save(gameTheme);
     }
+
+    @Override
+    public List<GameTheme> getSelectedThemes() {
+        return repository.findAllSelected();
+    }
 }

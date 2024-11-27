@@ -41,6 +41,9 @@ public class Hobby {
 
     @Column(nullable = false)
     private Long textDescId;
+
+    @Column(nullable = false)
+    private Long theme = 1L;
     
     public Double getValue() {
         return ((this.getFoodstuffs().doubleValue() +

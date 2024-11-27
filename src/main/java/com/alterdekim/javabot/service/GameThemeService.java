@@ -11,4 +11,6 @@ public interface GameThemeService {
     void removeById(long themeId);
 
     void saveGameTheme(GameTheme gameTheme);
+
+    List<GameTheme> getSelectedThemes();
 }

@@ -37,6 +37,9 @@ public class Work {
     @Column(nullable = false)
     private Long textDescId;
 
+    @Column(nullable = false)
+    private Long theme = 1L;
+
     public Work(Float asocial, Float power, Float violence, Float foodstuffs, Long textNameId, Long textDescId) {
         this.asocial = asocial;
         this.power = power;

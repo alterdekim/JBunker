@@ -34,4 +34,7 @@ public class AdditionalFacts {
 
     @Column(nullable = false)
     private Long textDescId;
+
+    @Column(nullable = false)
+    private Long theme = 1L;
 }

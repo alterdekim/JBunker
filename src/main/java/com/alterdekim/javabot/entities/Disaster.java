@@ -24,6 +24,9 @@ public class Disaster {
     @Column(nullable = false)
     private Long descTextId;
 
+    @Column(nullable = false)
+    private Long theme = 1L;
+
     public Disaster(Long nameTextId, Long descTextId) {
         this.nameTextId = nameTextId;
         this.descTextId = descTextId;
