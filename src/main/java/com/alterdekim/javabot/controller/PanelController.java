@@ -41,7 +41,8 @@ public class PanelController {
             Card card = new Card();
             card.setId(b.getId());
             card.setTitle(textDataValService.getTextDataValById(b.getNameTextId()).getText());
-            card.setBody(Collections.singletonList("Description: " + textDataValService.getTextDataValById(b.getDescTextId()).getText()));
+            card.setBody(List.of("Description: " + textDataValService.getTextDataValById(b.getDescTextId()).getText(),
+                    "Theme: " + textDataValService.getTextDataValById(gameThemeService.getThemeById(b.getTheme()).getTextNameId()).getText()));
             cards.add(card);
         }
         cards.sort(Comparator.comparing(Card::getId));
@@ -56,7 +57,8 @@ public class PanelController {
             Card card = new Card();
             card.setId(b.getId());
             card.setTitle(textDataValService.getTextDataValById(b.getGenderTextId()).getText());
-            card.setBody(Arrays.asList("canDie: " + b.getCanDie(), "isMale: " + b.getIsMale(), "isFemale: " + b.getIsFemale()));
+            card.setBody(Arrays.asList("canDie: " + b.getCanDie(), "isMale: " + b.getIsMale(), "isFemale: " + b.getIsFemale(),
+                    "Theme: " + textDataValService.getTextDataValById(gameThemeService.getThemeById(b.getTheme()).getTextNameId()).getText()));
             cards.add(card);
         }
         cards.sort(Comparator.comparing(Card::getId));
@@ -71,7 +73,8 @@ public class PanelController {
             Card card = new Card();
             card.setId(b.getId());
             card.setTitle(textDataValService.getTextDataValById(b.getTextDescId()).getText());
-            card.setBody(Arrays.asList("Foodstuffs: " + b.getFoodstuffs(), "Asocial: " + b.getAsocial(), "Power: " + b.getPower(), "Violence:" + b.getViolence()));
+            card.setBody(Arrays.asList("Foodstuffs: " + b.getFoodstuffs(), "Asocial: " + b.getAsocial(), "Power: " + b.getPower(), "Violence:" + b.getViolence(),
+                    "Theme: " + textDataValService.getTextDataValById(gameThemeService.getThemeById(b.getTheme()).getTextNameId()).getText()));
             cards.add(card);
         }
         cards.sort(Comparator.comparing(Card::getId));
@@ -86,7 +89,8 @@ public class PanelController {
             Card card = new Card();
             card.setId(b.getId());
             card.setTitle(textDataValService.getTextDataValById(b.getTextNameId()).getText());
-            card.setBody(Arrays.asList("Foodstuffs: " + b.getFoodstuffs(), "Power: " + b.getPower(), "Violence: " + b.getViolence(), "Asocial: " + b.getAsocial(), "Description: " + textDataValService.getTextDataValById(b.getTextDescId()).getText()));
+            card.setBody(Arrays.asList("Foodstuffs: " + b.getFoodstuffs(), "Power: " + b.getPower(), "Violence: " + b.getViolence(), "Asocial: " + b.getAsocial(), "Description: " + textDataValService.getTextDataValById(b.getTextDescId()).getText(),
+                    "Theme: " + textDataValService.getTextDataValById(gameThemeService.getThemeById(b.getTheme()).getTextNameId()).getText()));
             cards.add(card);
         }
         cards.sort(Comparator.comparing(Card::getId));
@@ -101,7 +105,8 @@ public class PanelController {
             Card card = new Card();
             card.setId(b.getId());
             card.setTitle(textDataValService.getTextDataValById(b.getTextNameId()).getText());
-            card.setBody(Arrays.asList("Health index: " + b.getHealth_index(),"isChildfree: " + b.getIsChildfree(), "Description: " + textDataValService.getTextDataValById(b.getTextDescId()).getText()));
+            card.setBody(Arrays.asList("Health index: " + b.getHealth_index(),"isChildfree: " + b.getIsChildfree(), "Description: " + textDataValService.getTextDataValById(b.getTextDescId()).getText(),
+                    "Theme: " + textDataValService.getTextDataValById(gameThemeService.getThemeById(b.getTheme()).getTextNameId()).getText()));
             cards.add(card);
         }
         cards.sort(Comparator.comparing(Card::getId));
@@ -116,7 +121,14 @@ public class PanelController {
             Card card = new Card();
             card.setId(b.getId());
             card.setTitle(textDataValService.getTextDataValById(b.getTextNameId()).getText());
-            card.setBody(Arrays.asList("Foodstuffs: " + b.getFoodstuffs(), "Power: " + b.getPower(), "Asocial: " + b.getAsocial(), "Violence: " + b.getViolence(), "Is garbage: " + b.getGarbage(), "Description: " + textDataValService.getTextDataValById(b.getTextDescId()).getText()));
+            card.setBody(Arrays.asList("Foodstuffs: " + b.getFoodstuffs(),
+                    "Power: " + b.getPower(),
+                    "Asocial: " + b.getAsocial(),
+                    "Violence: " + b.getViolence(),
+                    "Is garbage: " + b.getGarbage(),
+                    "Description: " + textDataValService.getTextDataValById(b.getTextDescId()).getText(),
+                    "Theme: " + textDataValService.getTextDataValById(gameThemeService.getThemeById(b.getTheme()).getTextNameId()).getText()
+            ));
             cards.add(card);
         }
         cards.sort(Comparator.comparing(Card::getId));
