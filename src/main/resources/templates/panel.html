@@ -345,7 +345,8 @@
                                     </th:block>
                                 </th:block>
                                 <th:block th:unless="${section == 'actions' OR section == 'themes'}">
-                                    <select class="form-select">
+                                    <label for="object_selected_theme" class="col-form-label" th:text="#{themes}"></label>
+                                    <select id="object_selected_theme" class="form-select">
                                         <th:block th:each="tt: ${themes}">
                                             <option th:value="${tt.id}" th:text="${tt.title}"></option>
                                         </th:block>
