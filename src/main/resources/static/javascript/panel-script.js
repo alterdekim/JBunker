@@ -157,7 +157,7 @@ function edit_entry(obj) {
     if( __ss == "actions" ) {
         window.location.href = "/script-editor?script_id=" + ($(obj).attr("data-id"));
     } else {
-        $.post("/api/edit_entry", "section="+_ss+"&entry_id="+($(obj).attr("data-id")), function(data, status) {
+        $.post("/api/edit_entry", "section="+__ss+"&entry_id="+($(obj).attr("data-id")), function(data, status) {
             var jobj = JSON.parse(data);
             show_modal_edit(jobj, $(obj).attr("data-id"));
         });
