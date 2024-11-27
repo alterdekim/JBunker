@@ -324,6 +324,7 @@ public class DatabaseController {
     public String remove_entry(@RequestParam Map<String, String> params) {
         String section = params.get("section");
         long entry_id = Long.parseLong(params.get("entry_id"));
+
         switch (section) {
             case "agge" -> { bioService.removeById(entry_id); synergyService.removeByEntityId(entry_id, SectionType.AGE); }
             case "hobb" -> { hobbyService.removeById(entry_id); synergyService.removeByEntityId(entry_id, SectionType.HOBBY); }
