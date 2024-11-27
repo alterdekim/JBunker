@@ -21,7 +21,7 @@ public class Luggage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public Luggage(Float violence, Float power, Float asocial, Float foodstuffs, Boolean garbage, Long textNameId, Long textDescId) {
+    public Luggage(Float violence, Float power, Float asocial, Float foodstuffs, Boolean garbage, Long textNameId, Long textDescId, Long theme) {
         this.violence = violence;
         this.power = power;
         this.asocial = asocial;
@@ -29,6 +29,7 @@ public class Luggage {
         this.garbage = garbage;
         this.textNameId = textNameId;
         this.textDescId = textDescId;
+        this.theme = theme;
     }
 
     @Column(nullable=false)

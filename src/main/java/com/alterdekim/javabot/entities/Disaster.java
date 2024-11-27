@@ -27,8 +27,9 @@ public class Disaster {
     @Column(nullable = false)
     private Long theme = 1L;
 
-    public Disaster(Long nameTextId, Long descTextId) {
+    public Disaster(Long nameTextId, Long descTextId, Long theme) {
         this.nameTextId = nameTextId;
         this.descTextId = descTextId;
+        this.theme = theme;
     }
 }

@@ -15,12 +15,13 @@ import java.util.List;
 @Table(name = "hobby")
 public class Hobby {
 
-    public Hobby(Float foodstuffs, Float power, Float violence, Float asocial, Long textDescId) {
+    public Hobby(Float foodstuffs, Float power, Float violence, Float asocial, Long textDescId, Long theme) {
         this.foodstuffs = foodstuffs;
         this.power = power;
         this.violence = violence;
         this.asocial = asocial;
         this.textDescId = textDescId;
+        this.theme = theme;
     }
 
     @Id

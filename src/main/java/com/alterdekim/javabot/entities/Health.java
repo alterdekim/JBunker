@@ -35,10 +35,11 @@ public class Health {
     @Column(nullable = false)
     private Long theme = 1L;
 
-    public Health(Float health_index, Long textNameId, Long textDescId, Boolean isChildfree) {
+    public Health(Float health_index, Long textNameId, Long textDescId, Boolean isChildfree, Long theme) {
         this.health_index = health_index;
         this.textNameId = textNameId;
         this.textDescId = textDescId;
         this.isChildfree = isChildfree;
+        this.theme = theme;
     }
 }

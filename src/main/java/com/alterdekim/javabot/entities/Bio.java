@@ -19,11 +19,12 @@ public class Bio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public Bio(Boolean isMale, Boolean isFemale, Boolean canDie, Long genderTextId) {
+    public Bio(Boolean isMale, Boolean isFemale, Boolean canDie, Long genderTextId, Long theme) {
         this.isMale = isMale;
         this.isFemale = isFemale;
         this.canDie = canDie;
         this.genderTextId = genderTextId;
+        this.theme = theme;
     }
 
     @Column(nullable = false)

@@ -40,13 +40,14 @@ public class Work {
     @Column(nullable = false)
     private Long theme = 1L;
 
-    public Work(Float asocial, Float power, Float violence, Float foodstuffs, Long textNameId, Long textDescId) {
+    public Work(Float asocial, Float power, Float violence, Float foodstuffs, Long textNameId, Long textDescId, Long theme) {
         this.asocial = asocial;
         this.power = power;
         this.violence = violence;
         this.foodstuffs = foodstuffs;
         this.textNameId = textNameId;
         this.textDescId = textDescId;
+        this.theme = theme;
     }
     
     public Double getValue() {

@@ -39,7 +39,8 @@ public class DatabaseController {
         Boolean isfemale = Boolean.parseBoolean(params.get("isfemale"));
         String gender_text = new String(HashUtils.decodeHexString(params.get("gender_text")));
         TextDataVal t = textDataValService.save(new TextDataVal(gender_text));
-        bioService.saveBio(new Bio(ismale, isfemale, canDie, t.getId()));
+        Long themeId = Long.parseLong(params.get("object_selected_theme"));
+        bioService.saveBio(new Bio(ismale, isfemale, canDie, t.getId(), themeId));
     }
 
     private void saveHobby(Map<String, String> params) {
@@ -49,7 +50,10 @@ public class DatabaseController {
         Float foodRange = Float.parseFloat(params.get("foodRange"));
         String hobby_text = new String(HashUtils.decodeHexString(params.get("hobby_text")));
         TextDataVal t = textDataValService.save(new TextDataVal(hobby_text));
-        hobbyService.saveHobby(new Hobby(foodRange, powerRange, violenceRange, healRange, t.getId()));
+
+        Long themeId = Long.parseLong(params.get("object_selected_theme"));
+
+        hobbyService.saveHobby(new Hobby(foodRange, powerRange, violenceRange, healRange, t.getId(), themeId));
     }
 
     private void saveLuggage(Map<String, String> params) {
@@ -65,7 +69,9 @@ public class DatabaseController {
         String desc_text = new String(HashUtils.decodeHexString(params.get("luggage_desc_text")));
         TextDataVal t2 = textDataValService.save(new TextDataVal(desc_text));
 
-        luggageService.saveLuggage(new Luggage(violenceRange, powerRange, healRange, foodRange, isGarbage, t1.getId(), t2.getId()));
+        Long themeId = Long.parseLong(params.get("object_selected_theme"));
+
+        luggageService.saveLuggage(new Luggage(violenceRange, powerRange, healRange, foodRange, isGarbage, t1.getId(), t2.getId(), themeId));
     }
 
     private void saveHealth(Map<String, String> params) {
@@ -77,7 +83,9 @@ public class DatabaseController {
         String desc_text = new String(HashUtils.decodeHexString(params.get("heal_desc_text")));
         TextDataVal t2 = textDataValService.save(new TextDataVal(desc_text));
 
-        healthService.saveHealth(new Health(health_index, t1.getId(), t2.getId(), childFree));
+        Long themeId = Long.parseLong(params.get("object_selected_theme"));
+
+        healthService.saveHealth(new Health(health_index, t1.getId(), t2.getId(), childFree, themeId));
     }
 
     private void saveTheme(Map<String, String> params) {
@@ -98,7 +106,9 @@ public class DatabaseController {
         String desc_text = new String(HashUtils.decodeHexString(params.get("work_desc_text")));
         TextDataVal t2 = textDataValService.save(new TextDataVal(desc_text));
 
-        workService.saveWork(new Work(healRange, powerRange, violenceRange, foodRange, t1.getId(), t2.getId()));
+        Long themeId = Long.parseLong(params.get("object_selected_theme"));
+
+        workService.saveWork(new Work(healRange, powerRange, violenceRange, foodRange, t1.getId(), t2.getId(), themeId));
     }
 
     private void saveDiss(Map<String, String> params) {
@@ -108,7 +118,9 @@ public class DatabaseController {
         String desc_text = new String(HashUtils.decodeHexString(params.get("diss_desc_text")));
         TextDataVal t2 = textDataValService.save(new TextDataVal(desc_text));
 
-        disasterService.saveDisaster(new Disaster(t1.getId(), t2.getId()));
+        Long themeId = Long.parseLong(params.get("object_selected_theme"));
+
+        disasterService.saveDisaster(new Disaster(t1.getId(), t2.getId(), themeId));
     }
 
     private void saveAction(Map<String, String> params) {
