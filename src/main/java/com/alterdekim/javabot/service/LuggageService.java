@@ -14,4 +14,6 @@ public interface LuggageService {
     void saveLuggage(Luggage luggage);
 
     List<Synergy> getSynergies(Long id);
+
+    void updateLuggage(Long id, Float violence, Float power, Float asocial, Float foodstuffs, Boolean garbage, Long textNameId, Long textDescId, Long theme);
 }

@@ -14,4 +14,6 @@ public interface WorkService {
     void saveWork(Work work);
 
     List<Synergy> getSynergies(Long id);
+
+    void updateWork(Long id, Float asocial, Float power, Float violence, Float foodstuffs, Long textNameId, Long textDescId, Long theme);
 }

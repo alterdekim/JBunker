@@ -14,4 +14,6 @@ public interface HealthService {
     void saveHealth(Health health);
 
     List<Synergy> getSynergies(Long id);
+
+    void updateHealth(Long id, Float health_index, Long textNameId, Long textDescId, Boolean isChildfree, Long theme);
 }

@@ -14,4 +14,6 @@ public interface HobbyService {
     void removeById(Long id);
 
     List<Synergy> getSynergies(Long id);
+
+    void updateHobby(Long id, Float foodRange, Float powerRange, Float violenceRange, Float healRange, Long nameId, Long themeId);
 }

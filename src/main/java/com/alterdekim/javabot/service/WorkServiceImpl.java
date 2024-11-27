@@ -51,4 +51,11 @@ public class WorkServiceImpl implements WorkService {
     public List<Synergy> getSynergies(Long id) {
         return repository.getSynergies(id);
     }
+
+    @Override
+    public void updateWork(Long id, Float asocial, Float power, Float violence, Float foodstuffs, Long textNameId, Long textDescId, Long theme) {
+        repository.updateWork(id, asocial, power, violence, foodstuffs, textNameId, textDescId, theme);
+    }
+
+
 }

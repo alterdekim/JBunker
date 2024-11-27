@@ -51,4 +51,9 @@ public class BioServiceImpl implements BioService {
     public List<Synergy> getSynergies(Long id) {
         return repository.getSynergies(id);
     }
+
+    @Override
+    public void updateBio(Long id, Boolean isMale, Boolean isFemale, Boolean canDie, Long nameId, Long themeId) {
+        repository.updateBio(id, isMale, isFemale, canDie, nameId, themeId);
+    }
 }

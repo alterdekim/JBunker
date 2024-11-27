@@ -4,8 +4,10 @@ import com.alterdekim.javabot.entities.Health;
 import com.alterdekim.javabot.entities.Synergy;
 import com.alterdekim.javabot.entities.Work;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +22,10 @@ public interface HealthRepository extends JpaRepository<Health, Long> {
 
     @Query("SELECT h FROM Health h WHERE h.theme = :th")
     List<Health> findByTheme(@Param(value = "th") Long theme);
+
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Health h SET h.health_index = :health_index, h.textNameId = :textNameId, h.textDescId = :textDescId, h.isChildfree = :isChildfree, h.theme = :theme WHERE h.id = :uuid")
+    void updateHealth(@Param("uuid") Long id, @Param("health_index") Float health_index, @Param("textNameId") Long textNameId, @Param("textDescId") Long textDescId, @Param("isChildfree") Boolean isChildfree, @Param("theme") Long theme);
 }

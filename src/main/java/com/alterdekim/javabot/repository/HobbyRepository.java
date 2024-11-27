@@ -4,8 +4,10 @@ import com.alterdekim.javabot.entities.Health;
 import com.alterdekim.javabot.entities.Hobby;
 import com.alterdekim.javabot.entities.Synergy;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +22,9 @@ public interface HobbyRepository extends JpaRepository<Hobby, Long> {
 
     @Query("SELECT h FROM Hobby h WHERE h.theme = :th")
     List<Hobby> findByTheme(@Param(value = "th") Long theme);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Hobby h SET h.foodstuffs = :foodstuffs, h.power = :power, h.violence = :violence, h.asocial = :asocial, h.textDescId = :nameId, h.theme = :themeId WHERE h.id = :uuid")
+    void updateHobby(@Param("uuid") Long id, @Param("foodstuffs") Float foodstuffs, @Param("power") Float power, @Param("violence") Float violence, @Param("asocial") Float asocial, Long nameId, Long themeId);
 }

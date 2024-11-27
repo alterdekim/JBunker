@@ -49,4 +49,9 @@ public class LuggageServiceImpl implements LuggageService {
     public List<Synergy> getSynergies(Long id) {
         return repository.getSynergies(id);
     }
+
+    @Override
+    public void updateLuggage(Long id, Float violence, Float power, Float asocial, Float foodstuffs, Boolean garbage, Long textNameId, Long textDescId, Long theme) {
+        repository.updateLuggage(id, violence, power, asocial, foodstuffs, garbage, textNameId, textDescId, theme);
+    }
 }

@@ -51,4 +51,9 @@ public class HealthServiceImpl implements HealthService {
     public List<Synergy> getSynergies(Long id) {
         return repository.getSynergies(id);
     }
+
+    @Override
+    public void updateHealth(Long id, Float health_index, Long textNameId, Long textDescId, Boolean isChildfree, Long theme) {
+        repository.updateHealth(id, health_index, textNameId, textDescId, isChildfree, theme);
+    }
 }

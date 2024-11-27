@@ -44,4 +44,9 @@ public class DisasterServiceImpl implements DisasterService {
     public void saveDisaster(Disaster disaster) {
         repository.save(disaster);
     }
+
+    @Override
+    public void updateDisaster(Long id, Long nameTextId, Long descTextId, Long theme) {
+        repository.updateDisaster(id, nameTextId, descTextId, theme);
+    }
 }

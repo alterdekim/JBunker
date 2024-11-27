@@ -147,6 +147,7 @@ function show_modal_edit(jobj, oid) {
 }
 
 function edit_submit_entry(obj) {
+    // TODO: change this
     $.post("/api/remove_entry", "section="+new URL(window.location.href).searchParams.get("section")+"&entry_id="+($(obj).attr("data-entry-id")), function(data, status) {
         add_entry();
     });
@@ -157,7 +158,7 @@ function edit_entry(obj) {
     if( __ss == "actions" ) {
         window.location.href = "/script-editor?script_id=" + ($(obj).attr("data-id"));
     } else {
-        $.post("/api/edit_entry", "section="+__ss+"&entry_id="+($(obj).attr("data-id")), function(data, status) {
+        $.post("/api/get_entry", "section="+__ss+"&entry_id="+($(obj).attr("data-id")), function(data, status) {
             var jobj = JSON.parse(data);
             show_modal_edit(jobj, $(obj).attr("data-id"));
         });

@@ -14,4 +14,6 @@ public interface BioService {
     void removeById(Long id);
 
     List<Synergy> getSynergies(Long id);
+
+    void updateBio(Long id, Boolean isMale, Boolean isFemale, Boolean canDie, Long nameId, Long themeId);
 }

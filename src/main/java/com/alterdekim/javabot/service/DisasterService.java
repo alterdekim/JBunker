@@ -11,4 +11,6 @@ public interface DisasterService {
     void removeById(long dId);
 
     void saveDisaster(Disaster disaster);
+
+    void updateDisaster(Long id, Long nameTextId, Long descTextId, Long theme);
 }

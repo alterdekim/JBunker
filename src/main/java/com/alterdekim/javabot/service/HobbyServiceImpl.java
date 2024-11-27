@@ -51,4 +51,9 @@ public class HobbyServiceImpl implements HobbyService {
     public List<Synergy> getSynergies(Long id) {
         return repository.getSynergies(id);
     }
+
+    @Override
+    public void updateHobby(Long id, Float foodRange, Float powerRange, Float violenceRange, Float healRange, Long nameId, Long themeId) {
+        repository.updateHobby(id, foodRange, powerRange, violenceRange, healRange, nameId, themeId);
+    }
 }
