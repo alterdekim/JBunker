@@ -90,7 +90,7 @@
                                     </ul>
                                     </p>
                                     <th:block th:unless="${section == 'script_request'}">
-                                        <a href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal_syn" onclick="" class="btn btn-primary" th:text="#{eddittsynn}"></a>
+                                        <a th:unless="${section == 'actions' OR section == 'themes'}" href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal_syn" onclick="" class="btn btn-primary" th:text="#{eddittsynn}"></a>
                                         <a href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal" onclick="edit_entry(this)" class="btn btn-primary" th:text="#{edditbtn}"></a>
                                         <a href="#" th:data-id="${cc.id}" onclick="remove_entry(this)" class="btn btn-danger" th:text="#{remombtn}"></a>
                                     </th:block>
@@ -143,6 +143,9 @@
                                 </div>
                             </th:block>
                         </div>
+                    </th:block>
+                    <th:block th:if="${section == 'stats'}">
+                        <p>stats!!!!</p>
                     </th:block>
                 </div>
             </th:block>
