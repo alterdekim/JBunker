@@ -2,13 +2,20 @@ package com.alterdekim.javabot.service;
 
 import com.alterdekim.javabot.entities.Synergy;
 import com.alterdekim.javabot.entities.Work;
+import com.alterdekim.javabot.repository.GameThemeRepository;
 import com.alterdekim.javabot.repository.WorkRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkServiceImpl implements WorkService {
+
+    @Autowired
+    private GameThemeRepository themeRepository;
 
     private final WorkRepository repository;
 
@@ -18,7 +25,11 @@ public class WorkServiceImpl implements WorkService {
 
     @Override
     public List<Work> getAllWorks() {
-        return repository.findAll();
+        return themeRepository.findAllSelected()
+                .stream()
+                .map(t -> repository.findByTheme(t.getId()))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     @Override

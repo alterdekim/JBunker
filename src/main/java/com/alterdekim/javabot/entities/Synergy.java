@@ -33,9 +33,6 @@ public class Synergy {
     @Column(nullable = false)
     private Float probabilityValue;
 
-    @Column(nullable = false)
-    private Long theme = 1L;
-
     public Synergy(Long firstEntityId, SectionType firstType, Long secondEntityId, SectionType secondType, Float probabilityValue) {
         this.firstEntityId = firstEntityId;
         this.firstType = firstType;

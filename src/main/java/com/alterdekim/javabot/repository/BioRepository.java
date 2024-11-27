@@ -1,6 +1,7 @@
 package com.alterdekim.javabot.repository;
 
 import com.alterdekim.javabot.entities.Bio;
+import com.alterdekim.javabot.entities.Disaster;
 import com.alterdekim.javabot.entities.Synergy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,7 @@ public interface BioRepository extends JpaRepository<Bio, Long> {
 
     @Query(value = "SELECT new Synergy(s.id, s.firstEntityId, s.firstType, s.secondEntityId, s.secondType, s.probabilityValue) FROM Synergy s WHERE (s.firstType = 0 AND s.firstEntityId = :uuid) OR (s.secondType = 0 AND s.secondEntityId = :uuid)")
     List<Synergy> getSynergies(@Param(value = "uuid") Long bioId);
+
+    @Query("SELECT b FROM Bio b WHERE b.theme = :th")
+    List<Bio> findByTheme(@Param(value = "th") Long theme);
 }

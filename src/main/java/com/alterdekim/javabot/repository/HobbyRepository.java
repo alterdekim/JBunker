@@ -1,5 +1,6 @@
 package com.alterdekim.javabot.repository;
 
+import com.alterdekim.javabot.entities.Health;
 import com.alterdekim.javabot.entities.Hobby;
 import com.alterdekim.javabot.entities.Synergy;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,7 @@ public interface HobbyRepository extends JpaRepository<Hobby, Long> {
 
     @Query(value = "SELECT new Synergy(s.id, s.firstEntityId, s.firstType, s.secondEntityId, s.secondType, s.probabilityValue) FROM Synergy s WHERE (s.firstType = 2 AND s.firstEntityId = :uuid) OR (s.secondType = 2 AND s.secondEntityId = :uuid)")
     List<Synergy> getSynergies(@Param(value = "uuid") Long hobbId);
+
+    @Query("SELECT h FROM Hobby h WHERE h.theme = :th")
+    List<Hobby> findByTheme(@Param(value = "th") Long theme);
 }

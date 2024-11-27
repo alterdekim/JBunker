@@ -3,12 +3,19 @@ package com.alterdekim.javabot.service;
 import com.alterdekim.javabot.entities.Bio;
 import com.alterdekim.javabot.entities.Synergy;
 import com.alterdekim.javabot.repository.BioRepository;
+import com.alterdekim.javabot.repository.GameThemeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BioServiceImpl implements BioService {
+
+    @Autowired
+    private GameThemeRepository themeRepository;
 
     private BioRepository repository;
 
@@ -18,7 +25,11 @@ public class BioServiceImpl implements BioService {
 
     @Override
     public List<Bio> getAllBios() {
-        return repository.findAll();
+        return themeRepository.findAllSelected()
+                .stream()
+                .map(t -> repository.findByTheme(t.getId()))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     @Override
