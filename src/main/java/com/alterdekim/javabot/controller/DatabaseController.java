@@ -31,6 +31,7 @@ public class DatabaseController {
     private final SynergyService synergyService;
     private final ActionScriptsService actionService;
     private final ActionRequestService actionRequestService;
+    private final GameThemeService themeService;
 
     private void saveGender(Map<String, String> params) {
         Boolean canDie = Boolean.parseBoolean(params.get("canDie"));
@@ -77,6 +78,12 @@ public class DatabaseController {
         TextDataVal t2 = textDataValService.save(new TextDataVal(desc_text));
 
         healthService.saveHealth(new Health(health_index, t1.getId(), t2.getId(), childFree));
+    }
+
+    private void saveTheme(Map<String, String> params) {
+        String name_text = new String(HashUtils.decodeHexString(params.get("theme_name_text")));
+        TextDataVal t1 = textDataValService.save(new TextDataVal(name_text));
+        themeService.saveGameTheme(new GameTheme(t1.getId()));
     }
 
     private void saveWork(Map<String, String> params) {
@@ -191,6 +198,7 @@ public class DatabaseController {
             case "heal" -> saveHealth(params);
             case "hobb" -> saveHobby(params);
             case "actions" -> saveAction(params);
+            case "themes" -> saveTheme(params);
             default -> saveDiss(params);
         }
         return "ok";
@@ -228,6 +236,7 @@ public class DatabaseController {
             case "prof" -> workService.removeById(entry_id);
             case "actions" -> actionService.removeById(entry_id);
             case "script_request" -> actionRequestService.removeById(entry_id);
+            case "themes" -> themeService.removeById(entry_id);
             default -> disasterService.removeById(entry_id);
         }
         return "ok";
@@ -250,6 +259,7 @@ public class DatabaseController {
                 case "heal" -> mapper.writeValueAsString(healthService.getAllHealth());
                 case "lugg" -> mapper.writeValueAsString(luggageService.getAllLuggages());
                 case "actions" -> mapper.writeValueAsString(actionService.getAllActionScripts());
+                case "themes" -> mapper.writeValueAsString(themeService.getAllGameThemes());
                 default -> mapper.writeValueAsString(disasterService.getAllDisasters());
             };
         } catch (JacksonException e) {
@@ -270,6 +280,7 @@ public class DatabaseController {
                 case "heal" -> mapper.writeValueAsString(healthService.getHealthById(l));
                 case "lugg" -> mapper.writeValueAsString(luggageService.getLuggageById(l));
                 case "actions" -> mapper.writeValueAsString(actionService.getActionScriptById(l));
+                case "themes" -> mapper.writeValueAsString(themeService.getThemeById(l));
                 default -> mapper.writeValueAsString(disasterService.getDisasterById(l));
             };
         } catch (JacksonException e) {
