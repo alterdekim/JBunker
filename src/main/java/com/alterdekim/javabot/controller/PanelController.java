@@ -162,6 +162,7 @@ public class PanelController {
             card.setId(theme.getId());
             card.setTitle(textDataValService.getTextDataValById(theme.getTextNameId()).getText());
             card.setBody(new ArrayList<>());
+            card.setSelected(theme.getIsSelected());
             cards.add(card);
         }
         return cards;
@@ -236,5 +237,6 @@ public class PanelController {
         private String title;
         private List<String> body;
         private Long id;
+        private Boolean selected = false;
     }
 }
