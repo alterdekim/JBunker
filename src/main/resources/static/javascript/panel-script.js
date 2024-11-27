@@ -148,9 +148,15 @@ function show_modal_edit(jobj, oid) {
 
 function edit_submit_entry(obj) {
     // TODO: change this
-    $.post("/api/remove_entry", "section="+new URL(window.location.href).searchParams.get("section")+"&entry_id="+($(obj).attr("data-entry-id")), function(data, status) {
-        add_entry();
-    });
+    let __a = grab_form();
+    __a["entry_id"] = $(obj).attr("data-entry-id");
+   $.ajax({
+    url: "/api/edit_entry",
+    type: "POST",
+    data: __a
+   }).done(function() {
+       window.location.reload();
+   });
 }
 
 function edit_entry(obj) {
