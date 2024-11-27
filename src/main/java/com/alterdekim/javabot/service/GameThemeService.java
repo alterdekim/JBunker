@@ -13,4 +13,6 @@ public interface GameThemeService {
     void saveGameTheme(GameTheme gameTheme);
 
     List<GameTheme> getSelectedThemes();
+
+    void setThemeState(Long themeId, Boolean themeState);
 }

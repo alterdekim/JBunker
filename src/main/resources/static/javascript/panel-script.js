@@ -294,4 +294,19 @@ $(function() {
             $(this).addClass("btn-secondary");
         }
     });
+
+    $(".is-selected-theme").click(function() {
+        if( $(this).attr("data-selected") == "true" ) {
+            $(this).attr("data-selected", "false");
+            $(this).removeClass("btn-success");
+            $(this).html($("#selected_button_texts").attr("data-notselected"));
+            $(this).addClass("btn-secondary");
+        } else {
+            $(this).attr("data-selected", "true");
+            $(this).removeClass("btn-secondary");
+            $(this).html($("#selected_button_texts").attr("data-selected"));
+            $(this).addClass("btn-success");
+        }
+        $.post("/api/set_theme", "theme_id="+($(this).attr("data-id"))+"&selected_state="+($(this).attr("data-selected")), function(data, status) {});
+    });
 });

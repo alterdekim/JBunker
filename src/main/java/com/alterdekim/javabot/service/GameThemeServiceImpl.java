@@ -37,4 +37,9 @@ public class GameThemeServiceImpl implements GameThemeService {
     public List<GameTheme> getSelectedThemes() {
         return repository.findAllSelected();
     }
+
+    @Override
+    public void setThemeState(Long themeId, Boolean themeState) {
+        repository.updateThemeState(themeId, themeState);
+    }
 }

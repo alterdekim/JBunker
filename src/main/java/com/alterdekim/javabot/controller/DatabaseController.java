@@ -288,4 +288,12 @@ public class DatabaseController {
         }
         return "error";
     }
+
+    @PostMapping("/api/set_theme")
+    public String set_theme(@RequestParam Map<String, String> params) {
+        long theme_id = Long.parseLong(params.get("theme_id"));
+        boolean state = Boolean.parseBoolean(params.get("selected_state"));
+        themeService.setThemeState(theme_id, state);
+        return "ok";
+    }
 }
