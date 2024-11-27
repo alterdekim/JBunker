@@ -4,6 +4,7 @@
         <th:block th:insert="~{fragments/header}"></th:block>
         <link rel="stylesheet" href="/static/css/util.css">
         <link rel="stylesheet" href="/static/css/panel.css">
+        <div id="selected_button_texts" th:data-selected="#{thmsel}" th:data-notselected="#{thmdes}" style="display: none;"></div>
     </head>
     <body class="bg-body-tertiary">
         <div th:replace="~{fragments/floating_button}"></div>
@@ -91,8 +92,8 @@
                                     </p>
                                     <th:block th:unless="${section == 'script_request'}">
                                         <a th:unless="${section == 'actions' OR section == 'themes'}" href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal_syn" onclick="" class="btn btn-primary" th:text="#{eddittsynn}"></a>
-                                        <a th:if="${section == 'themes'}" href="#" th:data-id="${cc.id}" th:data-selected="${cc.selected}" class="btn btn-success is-selected-theme" th:text="#{thmsel}"></a>
-                                        <a href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal" onclick="edit_entry(this)" class="btn btn-primary" th:text="#{edditbtn}"></a>
+                                        <a th:if="${section == 'themes'}" href="#" th:data-id="${cc.id}" th:data-selected="${cc.selected}" class="btn is-selected-theme"></a>
+                                        <a th:unless="${section == 'themes'}" href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal" onclick="edit_entry(this)" class="btn btn-primary" th:text="#{edditbtn}"></a>
                                         <a href="#" th:data-id="${cc.id}" onclick="remove_entry(this)" class="btn btn-danger" th:text="#{remombtn}"></a>
                                     </th:block>
                                     <th:block th:if="${section == 'script_request'}">
@@ -131,8 +132,8 @@
                                             </p>
                                             <th:block th:unless="${section == 'script_request'}">
                                                 <a th:unless="${section == 'actions' OR section == 'themes'}" href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal_syn" onclick="show_synergies_modal(this)" class="btn btn-primary" th:text="#{eddittsynn}"></a>
-                                                <a th:if="${section == 'themes'}" href="#" th:data-id="${cc.id}" th:data-selected="${cc.selected}" class="btn btn-success is-selected-theme" th:text="#{thmsel}"></a>
-                                                <a href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal" onclick="edit_entry(this)" class="btn btn-primary" th:text="#{edditbtn}"></a>
+                                                <a th:if="${section == 'themes'}" href="#" th:data-id="${cc.id}" th:data-selected="${cc.selected}" class="btn is-selected-theme"></a>
+                                                <a th:unless="${section == 'themes'}" href="#" th:data-id="${cc.id}" data-bs-toggle="modal" data-bs-target="#modal" onclick="edit_entry(this)" class="btn btn-primary" th:text="#{edditbtn}"></a>
                                                 <a href="#" th:data-id="${cc.id}" onclick="remove_entry(this)" class="btn btn-danger" th:text="#{remombtn}"></a>
                                             </th:block>
                                             <th:block th:if="${section == 'script_request'}">

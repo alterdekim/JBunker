@@ -283,3 +283,15 @@ function remove_synergy(obj) {
         window.location.reload();
     });
 }
+
+$(function() {
+    $(".is-selected-theme").each(function() {
+        if( $(this).attr("data-selected") == "true" ) {
+            $(this).html($("#selected_button_texts").attr("data-selected"));
+            $(this).addClass("btn-success");
+        } else {
+            $(this).html($("#selected_button_texts").attr("data-notselected"));
+            $(this).addClass("btn-secondary");
+        }
+    });
+});
