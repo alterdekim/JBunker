@@ -195,6 +195,7 @@ public class PanelController {
         boolean is_mobile = new UAgentInfo(uagent, accepth).detectSmartphone();
         model.addAttribute("is_mobile", is_mobile);
         model.addAttribute("section", section);
+        model.addAttribute("themes", themesToCards());
         switch (section) {
             case "lugg":
                 model.addAttribute( "cards", is_mobile ? luggageToCards() : toPairs(luggageToCards()) );
