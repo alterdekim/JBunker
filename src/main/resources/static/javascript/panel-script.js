@@ -88,6 +88,7 @@ function form_heal(jobj) {
     get_text_api(jobj.textDescId, function(t) {
         $("#heal_desc_text").val(t);
     });
+    $("#childFree").prop("checked", jobj.isChildfree);
     $("#health_index").val(jobj.health_index);
 }
 
