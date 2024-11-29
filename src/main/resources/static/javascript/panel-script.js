@@ -63,8 +63,8 @@ function form_lugg(jobj) {
     });
     $("#violenceRange").val(jobj.violence);
     $("#powerRange").val(jobj.power);
-    $("#healRange").val(jobj.heal);
-    $("#foodRange").val(jobj.food);
+    $("#healRange").val(jobj.asocial);
+    $("#foodRange").val(jobj.foodstuffs);
     $("#isgarbage").prop('checked', jobj.garbage);
 }
 
