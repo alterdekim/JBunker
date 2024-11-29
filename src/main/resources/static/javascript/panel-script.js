@@ -50,8 +50,8 @@ function form_hobb(jobj) {
     });
     $("#violenceRange").val(jobj.violence);
     $("#powerRange").val(jobj.power);
-    $("#healRange").val(jobj.heal);
-    $("#foodRange").val(jobj.food);
+    $("#healRange").val(jobj.asocial);
+    $("#foodRange").val(jobj.foodstuffs);
 }
 
 function form_lugg(jobj) {
@@ -141,6 +141,8 @@ function show_modal_edit(jobj, oid) {
             form_disaster(jobj);
             break;
     }
+
+    $("#object_selected_theme option[value="+jobj.theme+"]").prop('selected', true);
 
     $("#modal_submit_edit").css("display", "");
     $("#modal_submit_add").css("display", "none");
