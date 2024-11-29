@@ -142,7 +142,9 @@ function show_modal_edit(jobj, oid) {
             break;
     }
 
-    $("#object_selected_theme option[value="+jobj.theme+"]").prop('selected', true);
+    if( section != "actions" ) {
+        $("#object_selected_theme option[value="+jobj.theme+"]").prop('selected', true);
+    }
 
     $("#modal_submit_edit").css("display", "");
     $("#modal_submit_add").css("display", "none");
