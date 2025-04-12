@@ -3,16 +3,17 @@ package com.alterdekim.javabot.util;
 import com.alterdekim.javabot.Constants;
 import com.alterdekim.javabot.bot.InfoSections;
 import com.alterdekim.javabot.bot.SectionType;
+import com.alterdekim.javabot.bot.cards.ActionCard;
 import com.alterdekim.javabot.components.RandomComponent;
-import com.alterdekim.javabot.entities.ActionScript;
-import com.alterdekim.javabot.service.TextDataValService;
-import com.alterdekim.javabot.service.TextDataValServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class BotUtils {
     public static InlineKeyboardMarkup getJoinKeyboard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -77,13 +78,18 @@ public class BotUtils {
         return inlineKeyboardMarkup;
     }
 
-    public static InlineKeyboardMarkup getScriptKeyboard(List<ActionScript> scripts, TextDataValService textDataValService) {
+    public static InlineKeyboardMarkup getScriptKeyboard(List<Class<? extends ActionCard>> scripts) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(scripts.stream()
                 .map(s -> {
                     InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-                    inlineKeyboardButton.setText(textDataValService.getTextDataValById(s.getTextNameId()).getText());
-                    inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(textDataValService.getTextDataValById(s.getTextNameId()).getText().getBytes()));
+                    try {
+                        inlineKeyboardButton.setText(s.getDeclaredConstructor().newInstance().getName());
+                        inlineKeyboardButton.setCallbackData(HashUtils.getCRC32(s.getDeclaredConstructor().newInstance().getName().getBytes()));
+                    } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                             InvocationTargetException e) {
+                        log.error(e.getMessage());
+                    }
                     return Collections.singletonList(inlineKeyboardButton);
                 }).collect(Collectors.toList()));
         return inlineKeyboardMarkup;

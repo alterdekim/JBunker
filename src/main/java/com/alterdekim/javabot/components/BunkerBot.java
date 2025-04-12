@@ -4,14 +4,14 @@ import com.alterdekim.javabot.bot.*;
 import com.alterdekim.javabot.Commands;
 import com.alterdekim.javabot.Constants;
 import com.alterdekim.javabot.TelegramConfig;
+import com.alterdekim.javabot.bot.cards.ActionCard;
+import com.alterdekim.javabot.bot.cards.ChangeWorksCard;
+import com.alterdekim.javabot.bot.cards.RandomHIVCard;
 import com.alterdekim.javabot.entities.*;
 import com.alterdekim.javabot.service.*;
 import com.alterdekim.javabot.util.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.jse.JsePlatform;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -44,19 +44,19 @@ public class BunkerBot extends TelegramLongPollingBot {
 
     private double last_p = -1;
 
-    private List<Player> players;
+    public List<Player> players;
 
     private final BioService bioService;
-    private final HealthService healthService;
+    public final HealthService healthService;
     private final HobbyService hobbyService;
     private final LuggageService luggageService;
     private final WorkService workService;
     private final TextDataValService textDataValService;
     private final DisasterService disasterService;
     private final SynergyService synergyService;
-    private final ActionScriptsServiceImpl scriptsService;
+    private List<Class<? extends ActionCard>> actionCards;
 
-    private final RandomComponent random;
+    public final RandomComponent random;
 
     private DayNightFields dayNightFields;
 
@@ -72,7 +72,6 @@ public class BunkerBot extends TelegramLongPollingBot {
                      TextDataValService textDataValService,
                      DisasterService disasterService,
                      SynergyService synergyService,
-                     ActionScriptsServiceImpl scriptsService,
                      RandomComponent randomComponent) {
         this.telegramConfig = telegramConfig;
         this.players = new ArrayList<>();
@@ -85,7 +84,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.textDataValService = textDataValService;
         this.disasterService = disasterService;
         this.synergyService = synergyService;
-        this.scriptsService = scriptsService;
+        this.actionCards = List.of(RandomHIVCard.class, ChangeWorksCard.class);
         this.random = randomComponent;
         this.dayNightFields = new DayNightFields();
         this.linkedQueue = new ConcurrentLinkedQueue<>();
@@ -180,7 +179,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     private void startGame() {
         if( gameState != GameState.JOINING )
             return;
-        if(players.size() < 2) { // TODO: change to 2
+        if(players.size() < 1) { // TODO: change to 2
             sendApi(new SendMessage(groupId, Constants.PLAYERS_LESS_THAN_ZERO));
             return;
         }
@@ -188,12 +187,12 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.gameState = GameState.STARTED;
         Disaster d = (Disaster) BotUtils.getRandomFromList(disasterService.getAllDisasters(), random);
         sendApi(new SendMessage(groupId, getStringById(d.getDescTextId())));
+        //sendApi(new SendMessage(groupId, String.format(Constants.BUNKER_STATS, )));
         List<Bio> bios = bioService.getAllBios();
         List<Work> works = workService.getAllWorks();
         List<Luggage> luggs = luggageService.getAllLuggages();
         List<Hobby> hobbies = hobbyService.getAllHobbies();
         List<Health> healths = healthService.getAllHealth();
-        List<ActionScript> scripts = scriptsService.getAllActionScripts();
         for( int i = 0; i < players.size(); i++ ) {
             players.get(i).setAge(random.nextInt(57)+18);
             players.get(i).setGender((Bio) BotUtils.getRandomFromList(bios, random));
@@ -201,13 +200,12 @@ public class BunkerBot extends TelegramLongPollingBot {
             players.get(i).setLuggage((Luggage) BotUtils.getRandomFromList(luggs, random));
             players.get(i).setHobby((Hobby) BotUtils.getRandomFromList(hobbies, random));
             players.get(i).setHealth((Health) BotUtils.getRandomFromList(healths, random));
-            if( (random.nextInt(100) >= 45 || (i == (players.size()-1) && isNoOneHasScripts())) && !scripts.isEmpty() ) {
-                ActionScript asc = (ActionScript) BotUtils.getRandomFromList(scripts, random);
-                //ActionScript asc = scripts.get(scripts.size()-1);
-                scripts.removeIf(p -> p.getId().longValue() == asc.getId().longValue());
+            if( (random.nextInt(100) >= 45 || (i == (players.size()-1) && isNoOneHasScripts())) && !this.actionCards.isEmpty() ) {
+                Class<? extends ActionCard> asc = (Class<? extends ActionCard>) BotUtils.getRandomFromList(this.actionCards, random);
+                this.actionCards.removeIf(p -> p.getCanonicalName().equals(asc.getCanonicalName()));
                 players.get(i).setScripts(Collections.singletonList(asc));
             } else {
-                players.get(i).setScripts(new ArrayList<>());
+                players.get(i).setScripts(Collections.emptyList());
             }
         }
         doNight();
@@ -226,7 +224,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             sendApi(sendMessage);
             if( p.getScripts().isEmpty() ) continue;
             sendMessage = new SendMessage(p.getTelegramId()+"", Constants.SCRIPT_MESSAGE);
-            sendMessage.setReplyMarkup(BotUtils.getScriptKeyboard(p.getScripts(), textDataValService));
+            sendMessage.setReplyMarkup(BotUtils.getScriptKeyboard(p.getScripts()));
             try {
                 setScriptMessageId(p, sendApiMethod(sendMessage).getMessageId());
             } catch (Exception e) {
@@ -247,8 +245,16 @@ public class BunkerBot extends TelegramLongPollingBot {
     }
 
     private void processNightScriptButton(Player p, CallbackQuery callbackQuery, String data) {
-        ActionScript script = p.getScripts().stream()
-                .filter(s -> HashUtils.getCRC32(textDataValService.getTextDataValById(s.getTextNameId()).getText().getBytes()).equals(data))
+        Class<? extends ActionCard> script = p.getScripts().stream()
+                .filter(s -> {
+                            try {
+                                return HashUtils.getCRC32(s.getDeclaredConstructor().newInstance().getName().getBytes()).equals(data);
+                            } catch (Exception e) {
+                                log.error(e.getMessage());
+                            }
+                            return false;
+                        }
+                )
                 .findFirst()
                 .orElse(null);
         if( script == null ) return;
@@ -256,24 +262,11 @@ public class BunkerBot extends TelegramLongPollingBot {
         sendApi(new SendMessage(groupId, String.format(Constants.PRESSED_SCRIPT_NIGHT, callbackQuery.getFrom().getFirstName())));
         sendApi(new SendMessage(callbackQuery.getMessage().getChatId()+"", Constants.THANK_YOU));
         p.setScripts(new ArrayList<>());
-        executeLuaScript(script, p);
-    }
-
-    private void executeLuaScript(ActionScript script, Player p) {
-        Globals globals = JsePlatform.standardGlobals();
-        globals.set("players", LuaSerializer.serializeObjectList(players));
-        globals.set("player", LuaSerializer.serializeObject(p));
-        globals.set("genders", LuaSerializer.serializeObjectList(bioService.getAllBios()));
-        globals.set("hobbies", LuaSerializer.serializeObjectList(hobbyService.getAllHobbies()));
-        globals.set("healths", LuaSerializer.serializeObjectList(healthService.getAllHealth()));
-        globals.set("luggages", LuaSerializer.serializeObjectList(luggageService.getAllLuggages()));
-        globals.set("works", LuaSerializer.serializeObjectList(workService.getAllWorks()));
-        LuaValue chunk = globals.load(script.getScriptBody());
-        chunk.call();
-        this.players = LuaDeserializer.deserializePlayers(globals.get("players"))
-                .stream()
-                .peek(p1 -> p1.setScripts(getPlayerById(p1.getTelegramId()).getScripts()))
-                .collect(Collectors.toList());
+        try {
+            script.getDeclaredConstructor(BunkerBot.class, Player.class).newInstance(this, p).execute();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     private void processNightButton(CallbackQuery callbackQuery) {
@@ -333,7 +326,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         }
     }
     
-    private void sendApi(BotApiMethod<? extends Serializable> method) {
+    public void sendApi(BotApiMethod<? extends Serializable> method) {
         this.linkedQueue.add(method);
     }
 

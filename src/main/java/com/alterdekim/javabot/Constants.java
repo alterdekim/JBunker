@@ -53,4 +53,9 @@ public interface Constants {
     String INFO_MESSAGE = "Вот открытая информация о живых игроках\n";
 
     String CANT_SEND_NOT_DAY = "Нельзя использовать эту команду во время перерыва.";
+    String BUNKER_STATS = "В вашем бункере следующая ситуация:\n%s";
+    String RANDOM_HIV = "Затмение венеры (рандомный вич)";
+    String RANDOM_HIV_ENABLED = "Венера взошла для игрока %s";
+    String CHANGE_WORKS = "Обменяться профессиями";
+    String CHANGE_WORKS_TRIGGERED = "Вы обменялись профессиями с игроком %s";
 }

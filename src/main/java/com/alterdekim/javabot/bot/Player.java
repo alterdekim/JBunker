@@ -1,5 +1,6 @@
 package com.alterdekim.javabot.bot;
 
+import com.alterdekim.javabot.bot.cards.ActionCard;
 import com.alterdekim.javabot.entities.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class Player {
     private String firstName;
     private InfoSections infoSections;
     private Boolean isVoted = false;
-    private List<ActionScript> scripts;
+    private List<Class<? extends ActionCard>> scripts;
     private Integer scriptMessageId;
 
     public Player(Long telegramId, String name) {
