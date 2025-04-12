@@ -58,4 +58,8 @@ public interface Constants {
     String RANDOM_HIV_ENABLED = "Венера взошла для игрока %s";
     String CHANGE_WORKS = "Обменяться профессиями";
     String CHANGE_WORKS_TRIGGERED = "Вы обменялись профессиями с игроком %s";
+
+    String SCANNER_CARD = "Сканер";
+
+    String SCANNER_TRIGGERED = "Сканнер нашел скрытую стату игрока %s, %s";
 }

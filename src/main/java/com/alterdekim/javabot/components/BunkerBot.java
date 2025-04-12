@@ -7,6 +7,7 @@ import com.alterdekim.javabot.TelegramConfig;
 import com.alterdekim.javabot.bot.cards.ActionCard;
 import com.alterdekim.javabot.bot.cards.ChangeWorksCard;
 import com.alterdekim.javabot.bot.cards.RandomHIVCard;
+import com.alterdekim.javabot.bot.cards.ScannerCard;
 import com.alterdekim.javabot.entities.*;
 import com.alterdekim.javabot.service.*;
 import com.alterdekim.javabot.util.*;
@@ -51,7 +52,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     private final HobbyService hobbyService;
     private final LuggageService luggageService;
     private final WorkService workService;
-    private final TextDataValService textDataValService;
+    public final TextDataValService textDataValService;
     private final DisasterService disasterService;
     private final SynergyService synergyService;
     private List<Class<? extends ActionCard>> actionCards;
@@ -84,7 +85,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.textDataValService = textDataValService;
         this.disasterService = disasterService;
         this.synergyService = synergyService;
-        this.actionCards = new ArrayList<>(List.of(RandomHIVCard.class, ChangeWorksCard.class));
+        this.actionCards = new ArrayList<>(List.of(ScannerCard.class)); // RandomHIVCard.class, ChangeWorksCard.class
         this.random = randomComponent;
         this.dayNightFields = new DayNightFields();
         this.linkedQueue = new ConcurrentLinkedQueue<>();
