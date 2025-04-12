@@ -6,11 +6,16 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 
-@AllArgsConstructor
+
 @NoArgsConstructor
 public abstract class ActionCard {
     BunkerBot bot;
     Player activator;
+
+    public ActionCard(BunkerBot bot, Player activator) {
+        this.bot = bot;
+        this.activator = activator;
+    }
 
     public abstract void execute();
 
