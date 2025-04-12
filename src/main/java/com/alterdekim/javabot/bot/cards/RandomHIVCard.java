@@ -13,6 +13,9 @@ public class RandomHIVCard extends ActionCard {
         super(bot, activator);
     }
 
+    public RandomHIVCard() {
+    }
+
     @Override
     public void execute() {
         Player p = (Player) BotUtils.getRandomFromList(this.bot.players, this.bot.random);

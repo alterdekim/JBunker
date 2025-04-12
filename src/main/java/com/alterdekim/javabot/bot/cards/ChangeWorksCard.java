@@ -13,6 +13,9 @@ public class ChangeWorksCard extends ActionCard {
         super(bot, activator);
     }
 
+    public ChangeWorksCard() {
+    }
+
     @Override
     public void execute() {
         Player p = (Player) BotUtils.getRandomFromList(this.bot.players, this.bot.random);
