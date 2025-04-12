@@ -84,7 +84,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.textDataValService = textDataValService;
         this.disasterService = disasterService;
         this.synergyService = synergyService;
-        this.actionCards = List.of(RandomHIVCard.class, ChangeWorksCard.class);
+        this.actionCards = new ArrayList<>(List.of(RandomHIVCard.class, ChangeWorksCard.class));
         this.random = randomComponent;
         this.dayNightFields = new DayNightFields();
         this.linkedQueue = new ConcurrentLinkedQueue<>();
@@ -203,9 +203,9 @@ public class BunkerBot extends TelegramLongPollingBot {
             if( (random.nextInt(100) >= 45 || (i == (players.size()-1) && isNoOneHasScripts())) && !this.actionCards.isEmpty() ) {
                 Class<? extends ActionCard> asc = (Class<? extends ActionCard>) BotUtils.getRandomFromList(this.actionCards, random);
                 this.actionCards.removeIf(p -> p.getCanonicalName().equals(asc.getCanonicalName()));
-                players.get(i).setScripts(Collections.singletonList(asc));
+                players.get(i).setScripts(new ArrayList<>(Collections.singletonList(asc)));
             } else {
-                players.get(i).setScripts(Collections.emptyList());
+                players.get(i).setScripts(new ArrayList<>());
             }
         }
         doNight();
