@@ -64,4 +64,21 @@ public interface Constants {
     String SCANNER_TRIGGERED = "Сканнер нашел скрытую стату игрока %s, %s";
 
     String SABOTAGE_CARD = "Саботаж";
+    String GODS_WILL_CARD = "Божья воля";
+
+    String CHANGE_HOBBY_CARD = "Обменяться хобби";
+
+    String CHANGE_HOBBY_TRIGGERED = "Вы обменялись хобби с игроком %s";
+
+    String CHANGE_LUGGAGE_CARD = "Обменяться багажом";
+
+    String CHANGE_LUGGAGE_TRIGGERED = "Вы обменялись багажом с игроком %s";
+
+    String STEAL_LUGGAGE_CARD = "Украсть багаж";
+
+    String STEAL_LUGGAGE_TRIGGERED = "Вы украли багаж у игрока %s";
+
+    String RESURRECTION_CARD = "Воскресить игрока";
+
+    String RESURRECTION_CARD_TRIGGERED = "Вы воскресили игрока %s";
 }

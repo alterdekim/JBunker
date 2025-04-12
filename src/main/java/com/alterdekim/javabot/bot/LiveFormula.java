@@ -50,6 +50,10 @@ public class LiveFormula {
         this.p -= p;
     }
 
+    public void add(double p) {
+        this.p += p;
+    }
+
     private static Boolean entity(List<Player> players, SectionType ct, Long eid) {
         return switch (ct) {
             case GENDER -> LiveFormula.searchForBio(players, eid);

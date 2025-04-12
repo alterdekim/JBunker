@@ -43,11 +43,12 @@ public class BunkerBot extends TelegramLongPollingBot {
     private double last_p = -1;
 
     public List<Player> players;
+    public List<Player> dead_players;
 
     private final BioService bioService;
     public final HealthService healthService;
     private final HobbyService hobbyService;
-    private final LuggageService luggageService;
+    public final LuggageService luggageService;
     private final WorkService workService;
     public final TextDataValService textDataValService;
     private final DisasterService disasterService;
@@ -75,6 +76,7 @@ public class BunkerBot extends TelegramLongPollingBot {
                      RandomComponent randomComponent) {
         this.telegramConfig = telegramConfig;
         this.players = new ArrayList<>();
+        this.dead_players = new ArrayList<>();
         this.gameState = GameState.NONE;
         this.bioService = bioService;
         this.healthService = healthService;
@@ -84,7 +86,16 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.textDataValService = textDataValService;
         this.disasterService = disasterService;
         this.synergyService = synergyService;
-        this.actionCards = new ArrayList<>(List.of(Sabotage.class)); // ScannerCard.class, RandomHIVCard.class, ChangeWorksCard.class,
+        this.actionCards = new ArrayList<>(List.of(
+                ScannerCard.class,
+                RandomHIVCard.class,
+                ChangeWorksCard.class,
+                ChangeHobbyCard.class,
+                ChangeLuggageCard.class,
+                Sabotage.class,
+                GodsWillCard.class,
+                StealActionCard.class,
+                ResurrectionCard.class));
         this.random = randomComponent;
         this.dayNightFields = new DayNightFields();
         this.linkedQueue = new ConcurrentLinkedQueue<>();
@@ -184,6 +195,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             return;
         }
         Collections.shuffle(players);
+        this.dead_players = new ArrayList<>();
         this.gameState = GameState.STARTED;
         this.liveFormula = new LiveFormula();
         this.liveFormula.setPlayerList(players);
@@ -470,6 +482,7 @@ public class BunkerBot extends TelegramLongPollingBot {
                 .filter(e -> e.getValue().equals(max))
                 .forEach(i -> {
                     sendApi(new SendMessage(groupId, String.format(Constants.REMOVE_PLAYER, players.get(i.getKey()).getFirstName())));
+                    dead_players.add(players.get(i.getKey().intValue()));
                     players.remove(i.getKey().intValue());
                 });
     }
