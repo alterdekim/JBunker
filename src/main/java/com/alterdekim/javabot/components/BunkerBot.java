@@ -250,7 +250,7 @@ public class BunkerBot extends TelegramLongPollingBot {
                             try {
                                 return HashUtils.getCRC32(s.getDeclaredConstructor().newInstance().getName().getBytes()).equals(data);
                             } catch (Exception e) {
-                                log.error(e.getMessage());
+                                e.printStackTrace();
                             }
                             return false;
                         }
@@ -265,7 +265,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         try {
             script.getDeclaredConstructor(BunkerBot.class, Player.class).newInstance(this, p).execute();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 
