@@ -30,7 +30,6 @@ public class PanelController {
     private final WorkService workService;
     private final TextDataValService textDataValService;
     private final DisasterService disasterService;
-    private final ActionRequestServiceImpl actionRequestService;
     private final GameThemeServiceImpl gameThemeService;
 
     private List<Card> dissToCards() {
