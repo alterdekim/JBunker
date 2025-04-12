@@ -62,4 +62,6 @@ public interface Constants {
     String SCANNER_CARD = "Сканер";
 
     String SCANNER_TRIGGERED = "Сканнер нашел скрытую стату игрока %s, %s";
+
+    String SABOTAGE_CARD = "Саботаж";
 }

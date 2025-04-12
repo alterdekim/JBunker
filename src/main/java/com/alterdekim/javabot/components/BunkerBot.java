@@ -85,7 +85,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.textDataValService = textDataValService;
         this.disasterService = disasterService;
         this.synergyService = synergyService;
-        this.actionCards = new ArrayList<>(List.of(ScannerCard.class)); // RandomHIVCard.class, ChangeWorksCard.class
+        this.actionCards = new ArrayList<>(List.of(ScannerCard.class, RandomHIVCard.class, ChangeWorksCard.class));
         this.random = randomComponent;
         this.dayNightFields = new DayNightFields();
         this.linkedQueue = new ConcurrentLinkedQueue<>();
