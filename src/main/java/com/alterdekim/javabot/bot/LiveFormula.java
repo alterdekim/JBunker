@@ -2,11 +2,21 @@ package com.alterdekim.javabot.bot;
 
 import com.alterdekim.javabot.entities.Synergy;
 import com.alterdekim.javabot.util.Clamp;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
+@NoArgsConstructor
+@Setter
 public class LiveFormula {
-    public static double calc(List<Player> playerList, List<Synergy> synergies) {
+
+    private List<Player> playerList;
+    private List<Synergy> synergies;
+
+    private double p = 0.0d;
+
+    public double calc() {
         double i = 0;
         for( Player p : playerList ) {
             double age = 1.0D - (((double) p.getAge()) / 75.0D);
@@ -33,7 +43,11 @@ public class LiveFormula {
             Boolean eb = LiveFormula.entity(playerList, s.getSecondType(), s.getSecondEntityId());
             if( fb && eb ) i += s.getProbabilityValue().doubleValue() * _i;
         }
-        return Clamp.clamp(i * 1.2d, 0, 1);
+        return Clamp.clamp((i * 1.2d) + p, 0, 1);
+    }
+
+    public void sub(double p) {
+        this.p -= p;
     }
 
     private static Boolean entity(List<Player> players, SectionType ct, Long eid) {

@@ -4,10 +4,7 @@ import com.alterdekim.javabot.bot.*;
 import com.alterdekim.javabot.Commands;
 import com.alterdekim.javabot.Constants;
 import com.alterdekim.javabot.TelegramConfig;
-import com.alterdekim.javabot.bot.cards.ActionCard;
-import com.alterdekim.javabot.bot.cards.ChangeWorksCard;
-import com.alterdekim.javabot.bot.cards.RandomHIVCard;
-import com.alterdekim.javabot.bot.cards.ScannerCard;
+import com.alterdekim.javabot.bot.cards.*;
 import com.alterdekim.javabot.entities.*;
 import com.alterdekim.javabot.service.*;
 import com.alterdekim.javabot.util.*;
@@ -63,6 +60,8 @@ public class BunkerBot extends TelegramLongPollingBot {
 
     private ConcurrentLinkedQueue<BotApiMethod<? extends Serializable>> linkedQueue;
 
+    public LiveFormula liveFormula;
+
     @SuppressWarnings("deprecation")
     public BunkerBot(TelegramConfig telegramConfig,
                      BioService bioService,
@@ -85,7 +84,7 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.textDataValService = textDataValService;
         this.disasterService = disasterService;
         this.synergyService = synergyService;
-        this.actionCards = new ArrayList<>(List.of(ScannerCard.class, RandomHIVCard.class, ChangeWorksCard.class));
+        this.actionCards = new ArrayList<>(List.of(Sabotage.class)); // ScannerCard.class, RandomHIVCard.class, ChangeWorksCard.class,
         this.random = randomComponent;
         this.dayNightFields = new DayNightFields();
         this.linkedQueue = new ConcurrentLinkedQueue<>();
@@ -186,6 +185,9 @@ public class BunkerBot extends TelegramLongPollingBot {
         }
         Collections.shuffle(players);
         this.gameState = GameState.STARTED;
+        this.liveFormula = new LiveFormula();
+        this.liveFormula.setPlayerList(players);
+        this.liveFormula.setSynergies(synergyService.getAllSynergies());
         Disaster d = (Disaster) BotUtils.getRandomFromList(disasterService.getAllDisasters(), random);
         sendApi(new SendMessage(groupId, getStringById(d.getDescTextId())));
         //sendApi(new SendMessage(groupId, String.format(Constants.BUNKER_STATS, )));
@@ -345,7 +347,7 @@ public class BunkerBot extends TelegramLongPollingBot {
 
     private void doDay() {
         dayNightFields.setIsNight(false);
-        double p = Math.floor(LiveFormula.calc(players, synergyService.getAllSynergies())*100d);
+        double p = Math.floor(this.liveFormula.calc()*100d);
         if( this.last_p < 0 ) { this.last_p = p; }
         if( p > this.last_p ) {
             sendApi(new SendMessage(groupId, String.format(Constants.DAY_MESSAGE_UPPER, (int) p, (p - this.last_p))));
@@ -449,7 +451,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     }
 
     private void endGame() {
-        double d = Math.floor(LiveFormula.calc(players, synergyService.getAllSynergies())*100d);
+        double d = Math.floor(this.liveFormula.calc()*100d);
         sendApi(new SendMessage(groupId, String.format(Constants.END_GAME, d)));
         if(!players.isEmpty() && Math.floor(random.nextDouble()*100d) <= d) {
             sendApi(new SendMessage(groupId, String.format(Constants.WIN_MESSAGE,

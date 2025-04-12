@@ -16,7 +16,7 @@ public class Sabotage extends ActionCard {
 
     @Override
     public void execute() {
-
+        this.bot.liveFormula.sub(5.0d / 100.0d);
     }
 
     @Override
