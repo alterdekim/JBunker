@@ -30,7 +30,6 @@ public class PanelController {
     private final WorkService workService;
     private final TextDataValService textDataValService;
     private final DisasterService disasterService;
-    private final ActionScriptsServiceImpl scriptsService;
     private final ActionRequestServiceImpl actionRequestService;
     private final GameThemeServiceImpl gameThemeService;
 
@@ -136,36 +135,6 @@ public class PanelController {
         return cards;
     }
 
-    private List<Card> actionsToCards() {
-        List<ActionScript> scripts = scriptsService.getAllActionScripts();
-        List<Card> cards = new ArrayList<>();
-        for( ActionScript b : scripts ) {
-            Card card = new Card();
-            card.setId(b.getId());
-            card.setTitle(textDataValService.getTextDataValById(b.getTextNameId()).getText());
-            card.setBody(Arrays.asList("Script body hidden."));
-            cards.add(card);
-        }
-        cards.sort(Comparator.comparing(Card::getId));
-        Collections.reverse(cards);
-        return cards;
-    }
-
-    private List<Card> requestsToCards() {
-        List<ActionScriptRequest> scriptRequests = actionRequestService.getAllActionScripts();
-        List<Card> cards = new ArrayList<>();
-        for( ActionScriptRequest b : scriptRequests ) {
-            Card card = new Card();
-            card.setId(b.getId());
-            card.setTitle(b.getTextName());
-            card.setBody(new ArrayList<>(Arrays.asList(b.getScriptBody().split("\n"))));
-            cards.add(card);
-        }
-        cards.sort(Comparator.comparing(Card::getId));
-        Collections.reverse(cards);
-        return cards;
-    }
-
     private List<Card> themesToCards() {
         List<GameTheme> themeList = gameThemeService.getAllGameThemes();
         List<Card> cards = new ArrayList<>();
@@ -217,12 +186,6 @@ public class PanelController {
                 break;
             case "stats":
                 // !
-                break;
-            case "actions":
-                model.addAttribute("cards", is_mobile ? actionsToCards() : toPairs(actionsToCards()) );
-                break;
-            case "script_request":
-                model.addAttribute("cards", is_mobile ? requestsToCards() : toPairs(requestsToCards()) );
                 break;
             case "themes":
                 model.addAttribute("cards", is_mobile ? themesToCards() : toPairs(themesToCards()));

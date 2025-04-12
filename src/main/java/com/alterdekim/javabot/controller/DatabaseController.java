@@ -29,8 +29,6 @@ public class DatabaseController {
     private final TextDataValService textDataValService;
     private final DisasterService disasterService;
     private final SynergyService synergyService;
-    private final ActionScriptsService actionService;
-    private final ActionRequestService actionRequestService;
     private final GameThemeService themeService;
 
     private void saveGender(Map<String, String> params) {
@@ -207,24 +205,6 @@ public class DatabaseController {
         disasterService.updateDisaster(id, t1.getId(), t2.getId(), themeId);
     }
 
-    private void saveAction(Map<String, String> params) {
-        String scriptBody = params.get("action_body_text");
-        String name_text = new String(HashUtils.decodeHexString(params.get("action_name_text")));
-        TextDataVal t1 = textDataValService.save(new TextDataVal(name_text));
-
-        String desc_text = new String(HashUtils.decodeHexString(params.get("action_desc_text")));
-        TextDataVal t2 = textDataValService.save(new TextDataVal(desc_text));
-
-        actionService.saveScript(new ActionScript(t1.getId(), t2.getId(), scriptBody));
-    }
-
-    private void saveActionRequest(Map<String, String> params) {
-        String scriptBody = params.get("action_body_text");
-        String name_text = new String(HashUtils.decodeHexString(params.get("action_name_text")));
-        String desc_text = new String(HashUtils.decodeHexString(params.get("action_desc_text")));
-        actionRequestService.saveScript(new ActionScriptRequest(name_text, desc_text, scriptBody));
-    }
-
     @PostMapping("/api/remove_synergy")
     public String remove_synergy(@RequestParam Map<String, String> params) {
         long id = Long.parseLong(params.get("synergy_id"));
@@ -293,30 +273,9 @@ public class DatabaseController {
             case "prof" -> saveWork(params);
             case "heal" -> saveHealth(params);
             case "hobb" -> saveHobby(params);
-            case "actions" -> saveAction(params);
             case "themes" -> saveTheme(params);
             default -> saveDiss(params);
         }
-        return "ok";
-    }
-
-    @PostMapping("/api/accept_script_request")
-    public String accept_script_request(@RequestParam Map<String, String> params) {
-        long entry_id = Long.parseLong(params.get("entry_id"));
-        ActionScriptRequest req = actionRequestService.getActionScriptById(entry_id);
-        String scriptBody = req.getScriptBody();
-        String name_text = req.getTextName();
-        TextDataVal t1 = textDataValService.save(new TextDataVal(name_text));
-        String desc_text = req.getTextDesc();
-        TextDataVal t2 = textDataValService.save(new TextDataVal(desc_text));
-        actionService.saveScript(new ActionScript(t1.getId(), t2.getId(), scriptBody));
-        actionRequestService.removeById(entry_id);
-        return "ok";
-    }
-
-    @PostMapping("/public/api/add_entry_request")
-    public String add_entry_request(@RequestParam Map<String, String> params) {
-        saveActionRequest(params);
         return "ok";
     }
 
@@ -331,8 +290,6 @@ public class DatabaseController {
             case "lugg" -> { luggageService.removeById(entry_id); synergyService.removeByEntityId(entry_id, SectionType.LUGGAGE); }
             case "heal" -> { healthService.removeById(entry_id); synergyService.removeByEntityId(entry_id, SectionType.HEALTH); }
             case "prof" -> { workService.removeById(entry_id); synergyService.removeByEntityId(entry_id, SectionType.WORK); }
-            case "actions" -> actionService.removeById(entry_id);
-            case "script_request" -> actionRequestService.removeById(entry_id);
             case "themes" -> themeService.removeById(entry_id);
             default -> disasterService.removeById(entry_id);
         }
@@ -355,7 +312,6 @@ public class DatabaseController {
                 case "prof" -> mapper.writeValueAsString(workService.getAllWorks());
                 case "heal" -> mapper.writeValueAsString(healthService.getAllHealth());
                 case "lugg" -> mapper.writeValueAsString(luggageService.getAllLuggages());
-                case "actions" -> mapper.writeValueAsString(actionService.getAllActionScripts());
                 case "themes" -> mapper.writeValueAsString(themeService.getAllGameThemes());
                 default -> mapper.writeValueAsString(disasterService.getAllDisasters());
             };
@@ -376,7 +332,6 @@ public class DatabaseController {
                 case "prof" -> mapper.writeValueAsString(workService.getWorkById(l));
                 case "heal" -> mapper.writeValueAsString(healthService.getHealthById(l));
                 case "lugg" -> mapper.writeValueAsString(luggageService.getLuggageById(l));
-                case "actions" -> mapper.writeValueAsString(actionService.getActionScriptById(l));
                 case "themes" -> mapper.writeValueAsString(themeService.getThemeById(l));
                 default -> mapper.writeValueAsString(disasterService.getDisasterById(l));
             };
