@@ -5,6 +5,7 @@ import com.alterdekim.javabot.Commands;
 import com.alterdekim.javabot.Constants;
 import com.alterdekim.javabot.TelegramConfig;
 import com.alterdekim.javabot.bot.cards.*;
+import com.alterdekim.javabot.bot.conditions.*;
 import com.alterdekim.javabot.entities.*;
 import com.alterdekim.javabot.service.*;
 import com.alterdekim.javabot.util.*;
@@ -54,6 +55,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     private final DisasterService disasterService;
     private final SynergyService synergyService;
     private List<Class<? extends ActionCard>> actionCards;
+    private List<ConditionCard> condCards;
 
     public final RandomComponent random;
 
@@ -62,6 +64,8 @@ public class BunkerBot extends TelegramLongPollingBot {
     private ConcurrentLinkedQueue<BotApiMethod<? extends Serializable>> linkedQueue;
 
     public LiveFormula liveFormula;
+
+    private VotingType votingType;
 
     @SuppressWarnings("deprecation")
     public BunkerBot(TelegramConfig telegramConfig,
@@ -95,7 +99,9 @@ public class BunkerBot extends TelegramLongPollingBot {
                 Sabotage.class,
                 GodsWillCard.class,
                 StealActionCard.class,
-                ResurrectionCard.class));
+                ResurrectionCard.class
+        ));
+        this.condCards = List.of(new AirStuff(), new AIStuff(), new FoodSupply(), new MedicalSupply(), new PowerMalfunction(), new StructuralIssues(), new Whispers());
         this.random = randomComponent;
         this.dayNightFields = new DayNightFields();
         this.linkedQueue = new ConcurrentLinkedQueue<>();
@@ -190,7 +196,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     private void startGame() {
         if( gameState != GameState.JOINING )
             return;
-        if(players.size() < 1) { // TODO: change to 2
+        if(players.size() < 2) { // TODO: change to 2
             sendApi(new SendMessage(groupId, Constants.PLAYERS_LESS_THAN_ZERO));
             return;
         }
@@ -202,7 +208,8 @@ public class BunkerBot extends TelegramLongPollingBot {
         this.liveFormula.setSynergies(synergyService.getAllSynergies());
         Disaster d = (Disaster) BotUtils.getRandomFromList(disasterService.getAllDisasters(), random);
         sendApi(new SendMessage(groupId, getStringById(d.getDescTextId())));
-        //sendApi(new SendMessage(groupId, String.format(Constants.BUNKER_STATS, )));
+        ConditionCard conditionCard = (ConditionCard) BotUtils.getRandomFromList(this.condCards, this.random);
+        conditionCard.executeCard(this, groupId);
         List<Bio> bios = bioService.getAllBios();
         List<Work> works = workService.getAllWorks();
         List<Luggage> luggs = luggageService.getAllLuggages();
@@ -369,6 +376,12 @@ public class BunkerBot extends TelegramLongPollingBot {
             sendApi(new SendMessage(groupId, String.format(Constants.DAY_MESSAGE, p)));
         }
         this.last_p = p;
+        this.votingType = (VotingType) BotUtils.getRandomFromList(new ArrayList<>(List.of(VotingType.MaxTieRandom, VotingType.MaxTieNone, VotingType.LeastVotesOut)), this.random);
+        sendApi(new SendMessage(groupId, switch (this.votingType) {
+            case MaxTieNone -> Constants.MAX_TIE_NONE;
+            case MaxTieRandom -> Constants.MAX_TIE_RANDOM;
+            case LeastVotesOut -> Constants.LEAST_VOTES_OUT;
+        }));
         sendApi(new SendMessage(groupId, dayNightFields.getDayMessage()));
         dayNightFields.setDayMessage("");
         setAllNotAnswered();
@@ -442,15 +455,41 @@ public class BunkerBot extends TelegramLongPollingBot {
     }
 
     private void endVote() {
-        Integer max = dayNightFields.getPoll().values().stream().max(Integer::compareTo).orElse(0);
-        long count = dayNightFields.getPoll().values().stream().filter(p -> p.equals(max)).count();
-        SendMessage sendMessage = new SendMessage(groupId, Constants.ENDVOTE);
-        if( count > 1 ) {
-            sendMessage = new SendMessage(groupId, Constants.DRAW);
-        } else {
-            removeVotePlayers(max);
+        switch (this.votingType) {
+            case MaxTieNone -> {
+                Integer max = dayNightFields.getPoll().values().stream().max(Integer::compareTo).orElse(0);
+                long count = dayNightFields.getPoll().values().stream().filter(p -> p.equals(max)).count();
+                SendMessage sendMessage = new SendMessage(groupId, Constants.ENDVOTE);
+                if( count > 1 ) {
+                    sendMessage = new SendMessage(groupId, Constants.DRAW);
+                } else {
+                    removeVotePlayers(max);
+                }
+                sendApi(sendMessage);
+            }
+            case MaxTieRandom -> {
+                Integer max = dayNightFields.getPoll().values().stream().max(Integer::compareTo).orElse(0);
+                long count = dayNightFields.getPoll().values().stream().filter(p -> p.equals(max)).count();
+                SendMessage sendMessage = new SendMessage(groupId, Constants.ENDVOTE);
+                if( count > 1 ) {
+                    int p_index = this.random.nextInt(this.players.size());
+                    sendMessage = new SendMessage(groupId, Constants.DRAW_GONE);
+                    sendApi(new SendMessage(groupId, String.format(Constants.REMOVE_PLAYER, players.get(p_index).getFirstName())));
+                    dead_players.add(players.get(p_index));
+                    players.remove(p_index);
+                } else {
+                    removeVotePlayers(max);
+                }
+                sendApi(sendMessage);
+            }
+            case LeastVotesOut -> {
+                Integer min = dayNightFields.getPoll().values().stream().min(Integer::compareTo).orElse(0);
+                SendMessage sendMessage = new SendMessage(groupId, Constants.ENDVOTE);
+                removeVotePlayers(min);
+                sendApi(sendMessage);
+            }
         }
-        sendApi(sendMessage);
+
         if( !checkEndGame() ) {
             doNight();
             return;
@@ -476,15 +515,17 @@ public class BunkerBot extends TelegramLongPollingBot {
     }
 
     private void removeVotePlayers(Integer max) {
-        dayNightFields.getPoll()
+        var first = dayNightFields.getPoll()
                 .entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(max))
-                .forEach(i -> {
-                    sendApi(new SendMessage(groupId, String.format(Constants.REMOVE_PLAYER, players.get(i.getKey()).getFirstName())));
-                    dead_players.add(players.get(i.getKey().intValue()));
-                    players.remove(i.getKey().intValue());
-                });
+                .findFirst();
+        if( first.isPresent() ) {
+            var i = first.get();
+            sendApi(new SendMessage(groupId, String.format(Constants.REMOVE_PLAYER, players.get(i.getKey()).getFirstName())));
+            dead_players.add(players.get(i.getKey().intValue()));
+            players.remove(i.getKey().intValue());
+        }
     }
 
     private void interruptGame() {
