@@ -21,7 +21,8 @@ public class Initializer {
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             telegramBotsApi.registerBot(bot);
-        } catch (TelegramApiException e) {
+            log.info("TELEGRAMBOTSAPI REGISTERED");
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
