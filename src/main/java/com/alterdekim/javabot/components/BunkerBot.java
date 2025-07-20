@@ -196,7 +196,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     private void startGame() {
         if( gameState != GameState.JOINING )
             return;
-        if(players.size() < 2) { // TODO: change to 2
+        if(players.size() < 1) { // TODO: change to 2
             sendApi(new SendMessage(groupId, Constants.PLAYERS_LESS_THAN_ZERO));
             return;
         }
@@ -234,6 +234,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     }
 
     private void doNight() {
+        this.dayNightFields.setDayMessage(new HashMap<>());
         this.dayNightFields.setIsNight(true);
         this.dayNightFields.setNightToken(random.nextInt(1000)+10);
         this.dayNightFields.setPoll(new HashMap<>());
@@ -297,39 +298,13 @@ public class BunkerBot extends TelegramLongPollingBot {
             Player p = getPlayerById(callbackQuery.getFrom().getId());
             InfoSections ins = p.getInfoSections();
             SectionType curSection = SectionType.fromHash(callbackQuery.getData());
-            switch(curSection) {
-                case GENDER:
-                    dayNightFields.appendMessage(String.format(Constants.GENDER_MESAGE, callbackQuery.getFrom().getFirstName(),  getStringById(p.getGender().getGenderTextId()),
-                            p.getGender().getCanDie() ? Constants.TRUE : Constants.FALSE,
-                            p.getGender().getIsMale() ? Constants.TRUE : Constants.FALSE,
-                            p.getGender().getIsFemale() ? Constants.TRUE : Constants.FALSE) + "\n");
-                    break;
-                case HEALTH:
-                    dayNightFields.appendMessage(String.format(Constants.HEALTH_MESSAGE, callbackQuery.getFrom().getFirstName(), getStringById(p.getHealth().getTextNameId()),
-                            getStringById(p.getHealth().getTextDescId()),
-                            (int) (p.getHealth().getHealth_index()*100f),
-                            p.getHealth().getIsChildfree() ? Constants.TRUE : Constants.FALSE) + "\n");
-                    break;
-                case AGE:
-                    dayNightFields.appendMessage(String.format(Constants.AGE_MESSAGE, callbackQuery.getFrom().getFirstName(), p.getAge()) + "\n");
-                    break;
-                case HOBBY:
-                    dayNightFields.appendMessage(String.format(Constants.HOBBY_MESSAGE, callbackQuery.getFrom().getFirstName(),
-                            getStringById(p.getHobby().getTextDescId())) + "\n");
-                    break;
-                case LUGGAGE:
-                    dayNightFields.appendMessage(String.format(Constants.LUGG_MESSAGE, callbackQuery.getFrom().getFirstName(),
-                            getStringById(p.getLuggage().getTextNameId()),
-                            getStringById(p.getLuggage().getTextDescId())) + "\n");
-                    break;
-                case WORK:
-                    dayNightFields.appendMessage(String.format(Constants.WORK_MESSAGE, callbackQuery.getFrom().getFirstName(),
-                            getStringById(p.getWork().getTextNameId()),
-                            getStringById(p.getWork().getTextDescId())) + "\n");
-                    break;
-                default:
+            switch (curSection) {
+                case GENDER, HEALTH, AGE, HOBBY, LUGGAGE, WORK ->
+                        dayNightFields.appendMessage(callbackQuery.getFrom().getId(), curSection);
+                default -> {
                     processNightScriptButton(p, callbackQuery, callbackQuery.getData());
                     return;
+                }
             }
             ins.pushShowedState(curSection);
             setIsAnswered(callbackQuery.getFrom().getId());
@@ -382,8 +357,8 @@ public class BunkerBot extends TelegramLongPollingBot {
             case MaxTieRandom -> Constants.MAX_TIE_RANDOM;
             case LeastVotesOut -> Constants.LEAST_VOTES_OUT;
         }));
-        sendApi(new SendMessage(groupId, dayNightFields.getDayMessage()));
-        dayNightFields.setDayMessage("");
+        showInfo();
+        dayNightFields.setDayMessage(new HashMap<>());
         setAllNotAnswered();
         setAllNotVoted();
         SendPoll sp = new SendPoll(groupId, Constants.POLL_QUESTION, getAllUsers());
@@ -427,7 +402,9 @@ public class BunkerBot extends TelegramLongPollingBot {
             message.append(p.getFirstName());
             message.append(":\n");
             InfoSections s = p.getInfoSections();
+            var boldType = this.dayNightFields.getDayMessage().get(p.getTelegramId());
             s.getSections().forEach(s1 -> {
+                if( s1.getType() == boldType ) message.append("<b>");
                 switch (s1.getType()) {
                     case GENDER -> message.append(String.format(Constants.GENDER_MESAGE, p.getFirstName(),  getStringById(p.getGender().getGenderTextId()),
                             p.getGender().getCanDie() ? Constants.TRUE : Constants.FALSE,
@@ -447,11 +424,14 @@ public class BunkerBot extends TelegramLongPollingBot {
                     case HOBBY -> message.append(String.format(Constants.HOBBY_MESSAGE, p.getFirstName(),
                             getStringById(p.getHobby().getTextDescId())));
                 }
+                if( s1.getType() == boldType ) message.append("</b>");
                 message.append("\n");
             });
             message.append("\n");
         }
-        sendApi(new SendMessage(groupId, message.toString()));
+        var infoMsg = new SendMessage(groupId, message.toString());
+        infoMsg.setParseMode("html");
+        sendApi(infoMsg);
     }
 
     private void endVote() {

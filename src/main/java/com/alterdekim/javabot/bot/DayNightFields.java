@@ -13,7 +13,7 @@ public class DayNightFields {
     private Integer nightToken;
     private String lastPollId;
     private Map<Integer, Integer> poll;
-    private String dayMessage;
+    private Map<Long, SectionType> dayMessage;
     private Integer turnCount;
 
     public DayNightFields() {
@@ -21,11 +21,11 @@ public class DayNightFields {
         this.nightToken = 0;
         this.lastPollId = "";
         this.poll = new HashMap<>();
-        this.dayMessage = "";
+        this.dayMessage = new HashMap<>();
         this.turnCount = 0;
     }
 
-    public void appendMessage(String s) {
-        this.dayMessage += s;
+    public void appendMessage(Long playerId, SectionType sectionType) {
+        this.dayMessage.put(playerId, sectionType);
     }
 }
