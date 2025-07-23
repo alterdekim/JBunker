@@ -99,7 +99,8 @@ public class BunkerBot extends TelegramLongPollingBot {
                 Sabotage.class,
                 GodsWillCard.class,
                 StealActionCard.class,
-                ResurrectionCard.class
+                ResurrectionCard.class,
+                SuddenDeathCard.class
         ));
         this.condCards = List.of(new AirStuff(), new AIStuff(), new FoodSupply(), new MedicalSupply(), new PowerMalfunction(), new StructuralIssues(), new Whispers());
         this.random = randomComponent;

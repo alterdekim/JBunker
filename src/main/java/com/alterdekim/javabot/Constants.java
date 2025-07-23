@@ -81,7 +81,11 @@ public interface Constants {
 
     String RESURRECTION_CARD = "Воскресить игрока";
 
+    String SUDDEN_DEATH = "Внезапная смерть";
+
     String RESURRECTION_CARD_TRIGGERED = "Вы воскресили игрока %s";
+
+    String SUDDEN_DEATH_TRIGGERED = "Вы убили игрока %s";
 
     String FOOD_SUPPLY_COND = "В бункере есть запас еды на месяц.";
 
