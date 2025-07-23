@@ -196,7 +196,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     private void startGame() {
         if( gameState != GameState.JOINING )
             return;
-        if(players.size() < 1) { // TODO: change to 2
+        if(players.size() < 2) { // TODO: change to 2
             sendApi(new SendMessage(groupId, Constants.PLAYERS_LESS_THAN_ZERO));
             return;
         }
@@ -351,7 +351,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             sendApi(new SendMessage(groupId, String.format(Constants.DAY_MESSAGE, p)));
         }
         this.last_p = p;
-        this.votingType = (VotingType) BotUtils.getRandomFromList(new ArrayList<>(List.of(VotingType.MaxTieRandom, VotingType.MaxTieNone, VotingType.LeastVotesOut)), this.random);
+        this.votingType = (VotingType) BotUtils.getRandomFromList(new ArrayList<>(List.of(VotingType.MaxTieRandom, VotingType.MaxTieNone, VotingType.MaxTieNone, VotingType.LeastVotesOut)), this.random);
         sendApi(new SendMessage(groupId, switch (this.votingType) {
             case MaxTieNone -> Constants.MAX_TIE_NONE;
             case MaxTieRandom -> Constants.MAX_TIE_RANDOM;
@@ -478,7 +478,7 @@ public class BunkerBot extends TelegramLongPollingBot {
     }
 
     private Boolean checkEndGame() {
-        return players.size() < 2 || dayNightFields.getTurnCount() >= 6;
+        return players.size() <= 2 || dayNightFields.getTurnCount() >= 6;
     }
 
     private void endGame() {

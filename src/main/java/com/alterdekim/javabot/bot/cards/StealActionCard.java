@@ -20,7 +20,7 @@ public class StealActionCard extends ActionCard {
 
     @Override
     public void execute() {
-        Player p = (Player) BotUtils.getRandomFromList(this.bot.players, this.bot.random);
+        Player p = (Player) BotUtils.getRandomFromList(this.getPlayersListWithoutActivator(), this.bot.random);
         Luggage l = p.getLuggage();
         p.setLuggage(this.bot.luggageService.getLuggageById(NOTHING_ID));
         this.activator.setLuggage(l);

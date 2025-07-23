@@ -5,6 +5,9 @@ import com.alterdekim.javabot.components.BunkerBot;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,4 +18,11 @@ public abstract class ActionCard {
     public abstract void execute();
 
     public abstract String getName();
+
+    List<Player> getPlayersListWithoutActivator() {
+        return this.bot.players
+                .stream()
+                .filter(p -> p.getTelegramId().longValue() != this.activator.getTelegramId().longValue())
+                .collect(Collectors.toList());
+    }
 }

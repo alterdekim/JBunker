@@ -18,7 +18,7 @@ public class ScannerCard extends ActionCard {
 
     @Override
     public void execute() {
-        Player p = (Player) BotUtils.getRandomFromList(this.bot.players, this.bot.random);
+        Player p = (Player) BotUtils.getRandomFromList(this.getPlayersListWithoutActivator(), this.bot.random);
         for(SectionType type : SectionType.values() ) {
             if( !p.getInfoSections().isShowed(type) ) {
                 String ss = switch (type) {

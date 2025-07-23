@@ -18,7 +18,7 @@ public class ChangeHobbyCard extends ActionCard {
 
     @Override
     public void execute() {
-        Player p = (Player) BotUtils.getRandomFromList(this.bot.players, this.bot.random);
+        Player p = (Player) BotUtils.getRandomFromList(this.getPlayersListWithoutActivator(), this.bot.random);
         Hobby w = this.activator.getHobby();
         this.activator.setHobby(p.getHobby());
         p.setHobby(w);

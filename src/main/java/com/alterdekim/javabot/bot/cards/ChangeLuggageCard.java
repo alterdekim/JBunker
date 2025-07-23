@@ -19,7 +19,7 @@ public class ChangeLuggageCard extends ActionCard {
 
     @Override
     public void execute() {
-        Player p = (Player) BotUtils.getRandomFromList(this.bot.players, this.bot.random);
+        Player p = (Player) BotUtils.getRandomFromList(this.getPlayersListWithoutActivator(), this.bot.random);
         Luggage w = this.activator.getLuggage();
         this.activator.setLuggage(p.getLuggage());
         p.setLuggage(w);
