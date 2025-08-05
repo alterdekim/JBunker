@@ -352,7 +352,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             sendApi(new SendMessage(groupId, String.format(Constants.DAY_MESSAGE, p)));
         }
         this.last_p = p;
-        this.votingType = (VotingType) BotUtils.getRandomFromList(new ArrayList<>(List.of(VotingType.MaxTieRandom, VotingType.MaxTieNone, VotingType.MaxTieNone, VotingType.LeastVotesOut)), this.random);
+        this.votingType = (VotingType) BotUtils.getRandomFromList(new ArrayList<>(List.of(VotingType.MaxTieRandom, VotingType.MaxTieNone, VotingType.MaxTieNone)), this.random);
         sendApi(new SendMessage(groupId, switch (this.votingType) {
             case MaxTieNone -> Constants.MAX_TIE_NONE;
             case MaxTieRandom -> Constants.MAX_TIE_RANDOM;
@@ -405,7 +405,7 @@ public class BunkerBot extends TelegramLongPollingBot {
             InfoSections s = p.getInfoSections();
             var boldType = this.dayNightFields.getDayMessage().get(p.getTelegramId());
             s.getSections().forEach(s1 -> {
-                if( s1.getType() == boldType ) message.append("<b>");
+                if( s1.getType() == boldType ) message.append("<u>");
                 switch (s1.getType()) {
                     case GENDER -> message.append(String.format(Constants.GENDER_MESAGE, p.getFirstName(),  getStringById(p.getGender().getGenderTextId()),
                             p.getGender().getCanDie() ? Constants.TRUE : Constants.FALSE,
@@ -425,7 +425,7 @@ public class BunkerBot extends TelegramLongPollingBot {
                     case HOBBY -> message.append(String.format(Constants.HOBBY_MESSAGE, p.getFirstName(),
                             getStringById(p.getHobby().getTextDescId())));
                 }
-                if( s1.getType() == boldType ) message.append("</b>");
+                if( s1.getType() == boldType ) message.append("</u>");
                 message.append("\n");
             });
             message.append("\n");
