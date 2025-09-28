@@ -344,13 +344,21 @@ public class BunkerBot extends TelegramLongPollingBot {
         dayNightFields.setIsNight(false);
         double p = Math.floor(this.liveFormula.calc()*100d);
         if( this.last_p < 0 ) { this.last_p = p; }
-        if( p > this.last_p ) {
-            sendApi(new SendMessage(groupId, String.format(Constants.DAY_MESSAGE_UPPER, (int) p, (p - this.last_p))));
-        } else if( p < this.last_p ) {
-            sendApi(new SendMessage(groupId, String.format(Constants.DAY_MESSAGE_DOWN, (int) p, (this.last_p - p))));
-        } else {
-            sendApi(new SendMessage(groupId, String.format(Constants.DAY_MESSAGE, p)));
-        }
+        sendApi(
+                new SendMessage(
+                        groupId, String.format(
+                                p > this.last_p ? Constants.DAY_MESSAGE_UPPER : Constants.DAY_MESSAGE_DOWN,
+                                (int) p,
+                                p > this.last_p ? (p - this.last_p) : (this.last_p - p),
+                                this.liveFormula.getFood() * 100f,
+                                this.liveFormula.getPower() * 100f,
+                                this.liveFormula.getAsocial() * 100f,
+                                this.liveFormula.getViolence() * 100f,
+                                this.liveFormula.getHealth() * 100f,
+                                this.liveFormula.isReproductionBonusApplied() ? "да" : "нет"
+                        )
+                )
+        );
         this.last_p = p;
         this.votingType = (VotingType) BotUtils.getRandomFromList(new ArrayList<>(List.of(VotingType.MaxTieRandom, VotingType.MaxTieNone, VotingType.MaxTieNone)), this.random);
         sendApi(new SendMessage(groupId, switch (this.votingType) {

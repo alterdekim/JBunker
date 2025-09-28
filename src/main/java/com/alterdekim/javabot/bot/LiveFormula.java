@@ -54,6 +54,67 @@ public class LiveFormula {
         this.p += p;
     }
 
+    public boolean isReproductionBonusApplied() {
+        return playerList.stream().anyMatch(t -> (t.getGender().getIsMale() && !t.getHealth().getIsChildfree())) &&
+                playerList.stream().anyMatch(t -> (t.getGender().getIsFemale() && !t.getHealth().getIsChildfree()));
+    }
+
+    public float getFood() {
+        float food = 0;
+        for( Player p : playerList ) {
+            float f = p.getWork().getFoodstuffs();
+            f += p.getLuggage().getFoodstuffs();
+            f += p.getHobby().getFoodstuffs();
+            f = f / 3.0f;
+            food += f;
+        }
+        return food / (float) playerList.size();
+    }
+
+    public float getPower() {
+        float power = 0;
+        for( Player p : playerList ) {
+            float f = p.getWork().getPower();
+            f += p.getLuggage().getPower();
+            f += p.getHobby().getPower();
+            f = f / 3.0f;
+            power += f;
+        }
+        return power / (float) playerList.size();
+    }
+
+    public float getAsocial() {
+        float asocial = 0;
+        for( Player p : playerList ) {
+            float f = p.getWork().getAsocial();
+            f += p.getLuggage().getAsocial();
+            f += p.getHobby().getAsocial();
+            f = f / 3.0f;
+            asocial += f;
+        }
+        return asocial / (float) playerList.size();
+    }
+
+    public float getViolence() {
+        float violence = 0;
+        for( Player p : playerList ) {
+            float f = p.getWork().getViolence();
+            f += p.getLuggage().getViolence();
+            f += p.getHobby().getViolence();
+            f = f / 3.0f;
+            violence += f;
+        }
+        return violence / (float) playerList.size();
+    }
+
+    public float getHealth() {
+        float health = 0;
+        for( Player p : playerList ) {
+            health += p.getHealth().getHealth_index();
+        }
+        return health / (float) playerList.size();
+    }
+
     private static Boolean entity(List<Player> players, SectionType ct, Long eid) {
         return switch (ct) {
             case GENDER -> LiveFormula.searchForBio(players, eid);
