@@ -6,8 +6,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 public class FoodSupply implements ConditionCard {
     @Override
-    public void executeCard(BunkerBot bot, String chatId) {
+    public void executeCard(BunkerBot bot) {
         bot.liveFormula.add(5.0d / 100.0d);
-        bot.sendApi(new SendMessage(chatId, Constants.FOOD_SUPPLY_COND));
+        bot.sendApi(bot.newMessage(Constants.FOOD_SUPPLY_COND));
     }
 }

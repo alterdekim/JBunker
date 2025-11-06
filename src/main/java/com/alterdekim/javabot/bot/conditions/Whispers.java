@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 public class Whispers implements ConditionCard {
     @Override
-    public void executeCard(BunkerBot bot, String chatId) {
-        bot.sendApi(new SendMessage(chatId, Constants.WHISPERS_COND));
+    public void executeCard(BunkerBot bot) {
+        bot.sendApi(bot.newMessage(Constants.WHISPERS_COND));
     }
 }
