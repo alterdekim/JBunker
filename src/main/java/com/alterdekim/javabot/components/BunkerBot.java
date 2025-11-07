@@ -579,7 +579,7 @@ public class BunkerBot extends TelegramLongPollingBot {
                 update.getMessage().getFrom().getId().equals(getMasterId()) && gameState == GameState.NONE) {
             groupId = chatId;
             msgThreadId = update.getMessage().getMessageThreadId() != null ? update.getMessage().getMessageThreadId() : -1;
-            sendApi(new SendMessage(chatId, Constants.GROUP_SET));
+            sendApi(newMessage(Constants.GROUP_SET));
         }
 
         if( !chatId.equals(groupId) || (msgThreadId > -1 && update.getMessage().getMessageThreadId() != msgThreadId.intValue()) ) return;
