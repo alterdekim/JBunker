@@ -589,6 +589,7 @@ public class BunkerBot extends TelegramLongPollingBot {
                 update.getMessage().getText().equals(Commands.START_GAME) ) &&
                 gameState == GameState.NONE) {
             SendMessage message = new SendMessage(chatId, Constants.START_GAME_MSG);
+            if( this.msgThreadId > -1 ) message.setMessageThreadId(this.msgThreadId);
             message.setReplyMarkup(BotUtils.getJoinKeyboard());
             sendApi(message);
             gameState = GameState.JOINING;
